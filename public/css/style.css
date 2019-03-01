@@ -123,7 +123,16 @@ body {
     background-color: #990000;
     color: #fff;
 }
-
+.img {
+    max-width: 100%;
+    margin: 0 auto;
+}
+.modal .modal-content {
+    background-color: #fff;
+}
+.modal .modal-footer {
+    background-color: #dedede;
+}
 @media only screen and (min-width: 993px) {
     .ocultar-menu {
         display: none !important;

@@ -48,7 +48,7 @@
                             <ul>
                                 <li><a href="{{ route('producto', ['tipo' => 'familia']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Editar familias</a></li>
                                 <li><a href="{{ route('producto', ['tipo' => 'uno']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Editar productos</a></li>
-                                <li><a href="{{ route('productos') }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Carga de tablas</a></li>
+                                <li><a href="{{ route('page', ['seccion' => 'producto']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Editar contenido</a></li>
                             </ul>
                         </div>
                     </li>
@@ -132,7 +132,7 @@
         </ul>
         <div class="row">
             <div class="col s12 m12 l9 xl9 offset-l3 offset-xl3">
-                <div class="d-flex align-items-center">
+                <div style="padding: 1em 0;" class="d-flex align-items-center">
                     <a href="#" data-target="nav-mobile" class="menu ocultar-menu no-margin sidenav-trigger text_principal_444444 bg-F9F9F9"><i class="material-icons">menu</i></a>
                     <span class="text-truncate">{{ $title }}</span>
                 </div>
@@ -148,7 +148,7 @@
         </div>
         <!-- Modal Structure -->
         <div id="modal1" class="modal">
-            <form onsubmit="event.preventDefault(); submitEdit(this);" method="post" action="" novalidate>
+            <form id="formModal" onsubmit="event.preventDefault(); submitEdit(this);" method="post" action="" novalidate>
                 <div class="modal-content">
                 </div>
                 <div class="modal-footer">
@@ -164,8 +164,56 @@
         <script src="{{ asset('js/var.js') }}"></script>
         <!-- </Script> -->
         <script>
+            url = '{{url()->current()}}';
+            $(".active").removeClass("active");
+            $(`a[href="${url}"]`).closest("ul").closest("li").addClass("active");
+            $(`a[href="${url}"]`).closest("li").addClass("active");
+            $(document).ready(function() {
+
+            });
             M.AutoInit();
             //
+            addRegistro = function(t) {
+                let modal = $("#modal1");
+                let html = footer = "";
+                let url_add = "{{ url('/adm/adddata/') }}";
+                switch(t) {
+                    case 'ventaja':
+                
+                        modal.find("form").attr("action",url_add);
+                        html += '<h4>Agregar ventaja</h4>';
+                        html += `<input name="tipo" type="hidden" value="${t}">`;
+                        html += '<div class="container add">';
+                            html += '<div class="row">';
+                                html += '<div class=" col s6">';
+                                    html += '<label for="first_name">Título</label>';
+                                    html += `<input placeholder="Título" id="title" name="title" type="text" required="true" class="validate">`;
+                                html += '</div>';
+                                html += '<div class=" col s6">';
+                                    html += '<label for="first_name">Orden</label>';
+                                    html += `<input placeholder="Orden" id="order" name="order" type="text" required="true" class="validate">`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class="file-field input-field col s12">';
+                                    html += '<div class="btn">';
+                                        html += '<span>Imagen</span>';
+                                        html += '<input type="file" id="icon" name="icon">';
+                                    html += '</div>';
+                                    html += '<div class="file-path-wrapper">';
+                                        html += `<input class="file-path validate" required="true" id="icon" name="icon" type="text">`;
+                                        html += '<span class="helper-text" data-error="wrong" data-success="right">Tamaño recomendado 92x92</span>';
+                                    html += '</div>';
+                                html += '</div>';
+                            html += '</div>';
+                        html += '</div>';
+                        footer += '<button type="submit" class="btn btn-success">Agregar</button>';
+                    break;
+                }
+                modal.find(".modal-content").html(html);
+                modal.find(".modal-footer").html(footer);
+                modal.modal("open");
+            }
             edit = function(t,id) {
                 let modal = $("#modal1");
                 let url = "{{ url('/adm/data/') }}";
@@ -239,21 +287,47 @@
                 let form_data = new FormData(t);
                 
                 if(validar(t)) {
-                    $.ajax({
-                        url: t.action,
-                        method: 'POST',
-                        data:  form_data,
-                        contentType: false,
-                        cache: false,
-                        processData: false,
-                        beforeSend : function() {
-                            notificacion("Subiendo archivo. Al finalizar la tabla se actualizará");
-                        },
-                        success: function(data){
-                            console.log(data);
-                            
-                        }
-                    });
+                    if($(t).find(".add").length) {
+                        let tipo = $("#frm_tipo").val();
+                        let url = $("#formTitulo").attr("action");
+                        let token = '{{ csrf_token() }}';
+                        let myForm = document.getElementById(t.id);
+                        let formData = new FormData(myForm);
+
+                        formData.append("_token",token);
+                        
+                        $.ajax({
+                            url: t.action,
+                            method: 'POST',
+                            data:  formData,
+                            contentType: false,
+                            cache: false,
+                            processData: false,
+                            beforeSend : function() {
+                                notificacion("Subiendo datos. Al finalizar la tabla se actualizará");
+                            },
+                            success: function(data){
+                                console.log(data);
+                                
+                            }
+                        });
+                    } else {
+                        $.ajax({
+                            url: t.action,
+                            method: 'POST',
+                            data:  form_data,
+                            contentType: false,
+                            cache: false,
+                            processData: false,
+                            beforeSend : function() {
+                                notificacion("Subiendo archivo. Al finalizar la tabla se actualizará");
+                            },
+                            success: function(data){
+                                console.log(data);
+                                
+                            }
+                        });
+                    }
                 } else
                     notificacion("Faltan datos necesarios","error");
             }

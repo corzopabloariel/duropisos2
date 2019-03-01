@@ -23,7 +23,9 @@ Route::group(['middleware' => 'auth', 'prefix' => 'adm'], function() {
     Route::get('/', 'admController@index');
 
     Route::get('data/{tipo}/{id}', ['uses' => 'adm\PageController@data' , 'as' => 'data']);
+    Route::post('titulo', ['uses' => 'adm\PageController@titulo' , 'as' => 'titulo']);
     Route::post('editdata', ['uses' => 'adm\PageController@editdata' , 'as' => 'editdata']);
+    Route::post('adddata', ['uses' => 'adm\PageController@adddata' , 'as' => 'adddata']);
 
     Route::get('logout', ['uses' => 'Auth\LoginController@logout' , 'as' => 'adm.logout']);
     Route::get('empresa',['uses' => 'adm\EmpresaController@index', 'as' => 'empresa']);

@@ -4,11 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Servicio extends Model
+class Ventaja extends Model
 {
-    protected $table = "servicio";
     protected $fillable = [
-        'image',
+        'icon',
         'title',
         'order'
     ];

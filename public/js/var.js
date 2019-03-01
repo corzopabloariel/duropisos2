@@ -26,3 +26,6 @@ validar = function(t, marca = true, visible = true) {
 // php artisan migrate:fresh
 // php artisan tinker
 // php artisan r:l
+// php artisan make:migrate create_xx_table --create=xxs
+// php artisan make:model Xx
+// php artisan migrate
