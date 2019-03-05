@@ -87,9 +87,15 @@ body {
     .collapsible-body > ul li:last-child a {
         border-bottom: none;
     }
+.messagebox_overlay {
+    z-index: 1000;
+}
 #nav-mobile .scroll {
     border-top:1px solid #ddd;
     border-bottom:1px solid #ddd;
+}
+#page-wrapper > div > main {
+    padding-top: 63px;
 }
 .scroll > ul {
     border-top: none;
@@ -101,6 +107,12 @@ body {
 
 .dato > div {
     background-color: #a39e98 !important;
+}
+.position-absolute {
+    position: absolute;
+} 
+.w-100 {
+    width: 100%;
 }
 .menu {
     padding: .6em;

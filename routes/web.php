@@ -18,11 +18,12 @@ Route::get('login','Auth\LoginController@showLoginForm')->name('login');
 
 Route::post('login','Auth\LoginController@login');
 
-
+// 'middleware' => 'auth'
 Route::group(['middleware' => 'auth', 'prefix' => 'adm'], function() {
     Route::get('/', 'admController@index');
 
     Route::get('data/{tipo}/{id}', ['uses' => 'adm\PageController@data' , 'as' => 'data']);
+    Route::get('erase/{tipo}/{id}', ['uses' => 'adm\PageController@erase' , 'as' => 'erase']);
     Route::post('titulo', ['uses' => 'adm\PageController@titulo' , 'as' => 'titulo']);
     Route::post('editdata', ['uses' => 'adm\PageController@editdata' , 'as' => 'editdata']);
     Route::post('adddata', ['uses' => 'adm\PageController@adddata' , 'as' => 'adddata']);

@@ -60,7 +60,7 @@
                         <h4>Descrupción</h4>
                         <p><span class="text-truncate">{{ empty($empresa["text"]) ? "Sin descripción" : $empresa["text"] }}</span></p>
                         <h4>Imagen</h4>
-                        <p><img class="materialboxed img" src="{{ $empresa['image'] }}"  onError="this.src='{{ asset('img/general/no-img.png') }}'" /></p>
+                        <p><img class="materialboxed img" src="{{ $empresa['image'] }}" onError="this.src='{{ asset('img/general/no-img.png') }}'" /></p>
                     </div>
                 </div>
                 @break;

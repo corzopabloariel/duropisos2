@@ -4,6 +4,8 @@
             <img src="{{ asset('img/logo/logo.png') }}" alt="Logo" class="mx-auto mb-4 d-block w-75"/>
             <div class="card">
                 <form class="col s12 mb-0 pt-3" method="post" action="{{ route('login') }}">
+                    @csrf
+                    @method('POST')
                     <div class="row">
                         <div class="input-field col s6">
                             <i class="material-icons prefix">account_circle</i>
@@ -23,7 +25,6 @@
                             <button class="waves-effect waves-light btn btn-block" type="submit">Login</button>
                         </div>
                     </div>
-                    @csrf
                 </form>
             </div>
         </div>
