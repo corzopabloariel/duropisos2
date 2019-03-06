@@ -148,7 +148,7 @@
             </div>
         </div>
         <!-- Modal Structure -->
-        <div id="modal1" class="modal">
+        <div id="modal1" class="modal modal-fixed-footer">
             <form id="formModal" onsubmit="event.preventDefault(); submitEdit(this);" method="post" action="" novalidate>
                 <div class="modal-content">
                 </div>
@@ -174,6 +174,13 @@
 
             });
             M.AutoInit();
+            
+            $("#modal1").modal({
+                onOpenEnd: function(modal, trigger) {
+                    if($(".modal select").length) 
+                        $(".modal select").formSelect();
+                }
+            });
             //
             addRegistro = function(t) {
                 let modal = $("#modal1");
@@ -203,8 +210,8 @@
                                         html += '<input type="file" id="icon" name="icon">';
                                     html += '</div>';
                                     html += '<div class="file-path-wrapper">';
-                                        html += `<input class="file-path" disabled required="true" id="icon" name="icon" type="text">`;
-                                        html += '<span class="helper-text" data-error="wrong" data-success="right">Tamaño recomendado 92x92</span>';
+                                        html += `<input class="file-path" required="true" id="icon_text" name="icon_text" type="text">`;
+                                        html += '<span class="helper-text">Tamaño recomendado 92x92</span>';
                                     html += '</div>';
                                 html += '</div>';
                             html += '</div>';
@@ -264,6 +271,92 @@
                         html += '</div>';
                         footer += '<button type="submit" class="btn btn-success">Agregar</button>';
                         break;
+                    case "pfamilia":
+                        modal.find("form").attr("action",url_add);
+                        html += '<h4>Agregar familia de productos</h4>';
+                        html += `<input name="tipo" type="hidden" value="${t}">`;
+                        html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
+                        html += '<div class="container add">';
+                            html += '<div class="row">';
+                                html += '<div class=" col s6">';
+                                    html += '<label for="first_name">Título</label>';
+                                    html += `<input placeholder="Título" id="title" name="title" type="text" required="true" class="validate">`;
+                                html += '</div>';
+                                html += '<div class=" col s6">';
+                                    html += '<label for="first_name">Orden</label>';
+                                    html += `<input maxlength="3" placeholder="Orden" id="order" name="order" type="text" required="true" class="validate">`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class="file-field input-field col s12">';
+                                    html += '<div class="btn">';
+                                        html += '<span>Imagen</span>';
+                                        html += '<input type="file" id="image" name="image">';
+                                    html += '</div>';
+                                    html += '<div class="file-path-wrapper">';
+                                        html += `<input class="file-path" required="true" id="image_text" name="image_text" type="text">`;
+                                        html += '<span class="helper-text">Tamaño recomendado 400x400</span>';
+                                    html += '</div>';
+                                html += '</div>';
+                            html += '</div>';
+                        html += '</div>';
+                        footer += '<button type="submit" class="btn btn-success">Agregar</button>';
+                        break;
+                    case 'trabajo':
+                        modal.find("form").attr("action",url_add);
+                        html += '<h4>Agregar trabajo</h4>';
+                        html += `<input name="tipo" type="hidden" value="${t}">`;
+                        html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
+                        html += '<div class="container add">';
+                            html += '<div class="row">';
+                                html += '<div class=" col s6">';
+                                    html += '<label for="title">Título</label>';
+                                    html += `<input placeholder="Título" id="title" name="title" type="text" required="true" class="validate">`;
+                                html += '</div>';
+                                html += '<div class=" col s6">';
+                                    html += '<label for="order">Orden</label>';
+                                    html += `<input maxlength="3" placeholder="Orden" id="order" name="order" type="text" required="true" class="validate">`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class="input-field col s6">';
+                                    html += '<select name="pfamilia_id" required="true">';
+                                        html += '<option value="" disabled selected>Seleccione</option>';
+                                        for(var i in window.familias)
+                                            html += `<option value="${i}">${window.familias[i]}</option>`;
+                                    html += '</select>';
+                                    html += '<label>Familia de producto</label>';
+                                html += '</div>';
+                                html += '<div class="input-field col s6">';
+                                    html += '<p style="margin-top:0;">';
+                                        html += '<label>';
+                                            html += '<input type="checkbox" class="filled-in" name="is_profesional_input" />';
+                                            html += '<span>Profesional</span>';
+                                        html += '</label>';
+                                    html += '</p>';
+                                    html += '<p style="margin-bottom:0;">';
+                                        html += '<label>';
+                                            html += '<input type="checkbox" class="filled-in" name="is_particular_input" />';
+                                            html += '<span>Particular</span>';
+                                        html += '</label>';
+                                    html += '</p>';
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class="file-field input-field col s12">';
+                                    html += '<div class="btn">';
+                                        html += '<span>Imagen</span>';
+                                        html += '<input type="file" id="image" name="image">';
+                                    html += '</div>';
+                                    html += '<div class="file-path-wrapper">';
+                                        html += `<input class="file-path" required="true" id="image_text" name="image_text" type="text">`;
+                                        html += '<span class="helper-text">Tamaño recomendado 400x400</span>';
+                                    html += '</div>';
+                                html += '</div>';
+                            html += '</div>';
+                        html += '</div>';
+                        footer += '<button type="submit" class="btn btn-success">Agregar</button>';
+                    break;
                 }
                 modal.find(".modal-content").html(html);
                 modal.find(".modal-footer").html(footer);
@@ -309,7 +402,7 @@
                                                     html += '<input type="file" id="icon" name="icon">';
                                                 html += '</div>';
                                                 html += '<div class="file-path-wrapper">';
-                                                    html += `<input class="file-path validate" disabled required="true" val="${result.icon}" id="icon_text" name="icon_text" type="text">`;
+                                                    html += `<input class="file-path validate" required="true" val="${result.icon}" id="icon_text" name="icon_text" type="text">`;
                                                 html += '</div>';
                                             html += '</div>';
                                         html += '</div>';
@@ -344,8 +437,8 @@
                                                     html += `<input type="file" id="icon" name="icon">`;
                                                 html += '</div>';
                                                 html += '<div class="file-path-wrapper">';
-                                                    html += `<input class="file-path validate" disabled value="${result.icon}" required="true" type="text" id="icon_text" name="icon_text">`;
-                                                    html += '<span class="helper-text" data-error="wrong" data-success="right">Tamaño recomendado 92x92</span>';
+                                                    html += `<input class="file-path validate" value="${result.icon}" required="true" type="text" id="icon_text" name="icon_text">`;
+                                                    html += '<span class="helper-text">Tamaño recomendado 92x92</span>';
                                                 html += '</div>';
                                             html += '</div>';
                                         html += '</div>';
@@ -353,6 +446,43 @@
                                         html += '<div class="row">';
                                             html += '<div class="col s12">';
                                                 html += `<img style="width:96px; margin:0 auto;" onError="this.src='{{ asset('img/general/no-img.png') }}'" src="{{ asset('img/') }}/${result.icon}" alt="Ícono ${result.id}" />`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                    html += '</div>';
+                                    footer += '<button type="submit" class="btn btn-success">Editar</button>';
+                                break;
+                                case 'pfamilia':
+                                    html += '<h4>Editar familia de productos</h4>';
+                                    html += `<input type="hidden" value="${result.id}" id="frm_id" name="frm_id" />`;
+                                    html += `<input name="tipo" type="hidden" value="${t}">`;
+                                    html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
+                                    html += '<div class="container">';
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s6">';
+                                                html += '<label for="title">Título</label>';
+                                                html += `<input placeholder="Título" id="title" name="title" type="text" required="true" class="validate" value="${result.title}">`;
+                                            html += '</div>';
+                                            html += '<div class=" col s6">';
+                                                html += '<label for="order">Orden</label>';
+                                                html += `<input maxlength="3" placeholder="Orden" id="order" name="order" type="text" required="true" class="validate" value="${result.order}">`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="row">';
+                                            html += '<div class="file-field input-field col s12">';
+                                                html += '<div class="btn">';
+                                                    html += '<span>Imagen</span>';
+                                                    html += `<input type="file" id="image" name="image">`;
+                                                html += '</div>';
+                                                html += '<div class="file-path-wrapper">';
+                                                    html += `<input class="file-path validate" value="${result.image}" required="true" type="text" id="image_text" name="image_text">`;
+                                                    html += '<span class="helper-text">Tamaño recomendado 400x400</span>';
+                                                html += '</div>';
+                                            html += '</div>';
+                                        html += '</div>';
+                                        
+                                        html += '<div class="row">';
+                                            html += '<div class="col s12">';
+                                                html += `<img style="width:96px; margin:0 auto;" onError="this.src='{{ asset('img/general/no-img.png') }}'" src="{{ asset('img/') }}/${result.image}" alt="Ícono ${result.id}" />`;
                                             html += '</div>';
                                         html += '</div>';
                                     html += '</div>';
@@ -409,8 +539,16 @@
                 
                 if(validar(t)) {
                     if($(t).find(".add").length) {
-                        let tipo = $("#tipo").val();
-                        
+                        let tipo = $("[name='tipo']").val();
+                        if(tipo == "trabajo") {
+                            if(!$("[name='is_particular_input']").is(":checked") && !$("[name='is_profesional_input']").is(":checked")) {
+                                notificacion("Debe seleccionar un tipo de trabajo","error");
+                                return false;
+                            }
+                            formData.append("is_particular", ($("[name='is_particular_input']").is(":checked") ? 1 : 0));
+                            formData.append("is_profesional", ($("[name='is_profesional_input']").is(":checked") ? 1 : 0));
+                            
+                        }
                         $.ajax({
                             url: t.action,
                             method: 'POST',
@@ -428,6 +566,7 @@
                                 $("#modal1").modal("close");
                             }
                         });
+                        
                     } else {
                         $.ajax({
                             url: t.action,
@@ -452,7 +591,10 @@
                     notificacion("Faltan datos necesarios","error");
             }
             erase = function(t,id) {
-                messagebox(`¿Está seguro de eliminar el registro de <strong>${t.toUpperCase()}</strong>?`,
+                name = t.toUpperCase();
+                if(t == "pfamilia")
+                    name = "FAMILIA DE PRODUCTOS"
+                messagebox(`¿Está seguro de eliminar el registro de <strong>${name}</strong>?`,
                 function() {
                     $(`tr[data-id="${id}"]`).remove();
                     let url = "{{ url('/adm/erase/') }}";
@@ -462,7 +604,11 @@
                             case "pregunta":
                             case "ventaja":
                             case "aplicacion":
+                            case "pfamilia":
                                 $("table tbody").html('<tr class="vacio"><td colspan="4">SIN DATOS</td></tr>');
+                                break;
+                            case "trabajo":
+                                $("table tbody").html('<tr class="vacio"><td colspan="6">SIN DATOS</td></tr>');
                                 break;
                         }
                     }

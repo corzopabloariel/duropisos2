@@ -10,7 +10,7 @@
             <div class="container">
                 <div class="card">
                     <div class="card-content">
-                        <span class="card-title">Familia de productos<button class="btn right"><i class="material-icons">add_circle</i></button></span>
+                        <span class="card-title">Familia de productos<button class="btn right" onclick="addRegistro('pfamilia')"><i class="material-icons">add_circle</i></button></span>
                         <table class="striped">
                             <thead>
                                 <th>Imagen</th>
@@ -19,17 +19,23 @@
                                 <th class="text-center">Acciones</th>
                             </thead>
                             <tbody>
-                                @foreach($familias as $familia)
-                                    <tr>
-                                        <td></td>
-                                        <td>{{$familia["title"]}}</td>
-                                        <td class="text-center">{{$familia["order"]}}</td>
-                                        <td class="text-center">
-                                            <button type="button" class="btn btn-primary" onclick="edit('familia',{{$familia['id']}})"><i class="material-icons">create</i></button>
-                                            <button type="button" class="btn btn-danger"><i class="material-icons">delete</i></button>
-                                        </td>
+                                @if(count($familias) != 0)
+                                    @foreach($familias as $familia)
+                                        <tr data-id="{{$familia['id']}}">
+                                            <td><img src="{{ asset('img/').'/'.$familia['image'] }}" style="height:50px;" /></td>
+                                            <td>{{$familia["title"]}}</td>
+                                            <td class="text-center">{{$familia["order"]}}</td>
+                                            <td class="text-center">
+                                                <button type="button" class="btn btn-primary" onclick="edit('pfamilia',{{$familia['id']}})"><i class="material-icons">create</i></button>
+                                                <button type="button" class="btn btn-danger" onclick="erase('pfamilia',{{$familia['id']}})"><i class="material-icons">delete</i></button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr class="vacio">
+                                        <td colspan="4">SIN DATOS</td>
                                     </tr>
-                                @endforeach
+                                @endif
                             </tbody>
                         </table>
                     </div>

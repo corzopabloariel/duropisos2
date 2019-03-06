@@ -13,6 +13,8 @@ use App\Titulo;
 use App\Ventaja;
 use App\Pregunta;
 use App\Aplicacion;
+use App\Pfamilia;
+use App\Trabajo;
 use Mockery\Undefined;
 
 class PageController extends Controller
@@ -76,6 +78,9 @@ class PageController extends Controller
             case "aplicacion":
                 $data = Aplicacion::find($id);
                 break;
+            case "pfamilia":
+                $data = Pfamilia::find($id);
+                break;
         }
         return $data;
     }
@@ -83,7 +88,7 @@ class PageController extends Controller
         $datos = $request->all();
         $tipo = $datos["tipo"];
         $data = null;
-        $icon_text = $url = "";
+        $icon_text = $image_text = $url = "";
         $id = $datos["id"];
         
         unset($datos["tipo"]);
@@ -100,6 +105,10 @@ class PageController extends Controller
             $icon_text = $datos["icon_text"];
             unset($datos["icon_text"]);
         }
+        if(isset($datos["image_text"])) {
+            $image_text = $datos["image_text"];
+            unset($datos["image_text"]);
+        }
 
         switch($tipo) {
             case "servicio":
@@ -109,6 +118,10 @@ class PageController extends Controller
             case "ventaja":
                 $data = Ventaja::find($id);
                 $datos["icon"] = $data["icon"];
+                break;
+            case "pfamilia":
+                $data = Pfamilia::find($id);
+                $datos["image"] = $data["image"];
                 break;
             case "aplicacion":
                 $data = Aplicacion::find($id);
@@ -123,7 +136,18 @@ class PageController extends Controller
                 $path = public_path('img/uploads/');
                 $name = $path . $fileName;
                 $file->move($path, $fileName);
-                $datos["icon"] = $name;
+                $datos["icon"] = "uploads/{$fileName}";
+            }
+        }
+        if(!empty($image_text)) {
+            if(isset($datos["image"])) {
+                $file = $request->file('image');
+                $extension = $file->getClientOriginalExtension();
+                $fileName = time() . '.' . $extension;
+                $path = public_path('img/uploads/');
+                $name = $path . $fileName;
+                $file->move($path, $fileName);
+                $datos["image"] = "uploads/{$fileName}";
             }
         }
         
@@ -133,36 +157,35 @@ class PageController extends Controller
             case "ventaja":
                 $name = "{$url}/{$datos["icon"]}";
                 
-                $html = "<td>";
-                    $html .= "<img style='width:50px' src='{$name}' />";
-                $html .= "</td>";
-                $html .= "<td>";
-                    $html .= $datos["title"];
-                $html .= "</td>";
-                $html .= "<td class='text-center'>";
-                    $html .= $datos["order"];
-                $html .= "</td>";
+                $html = "<td><img style='width:50px' src='{$name}' /></td>";
+                $html .= "<td>{$datos["title"]}</td>";
+                $html .= "<td class='text-center'>{$datos["order"]}</td>";
                 $html .= '<td class="text-center">';
                     $html .= '<button type="button" class="btn btn-primary" onclick="edit(\'ventaja\',' . $data["id"] . ')"><i class="material-icons">create</i></button> ';
                     $html .= '<button type="button" class="btn btn-danger" onclick="erase(\'ventaja\',' . $data["id"] . ')"><i class="material-icons">delete</i></button>';
                 $html .= '</td>';
             break;
             case "aplicacion":
-                
-                $html = "<td>";
-                    $html .= "<a href='https://www.youtube.com/watch?v={$datos["video"]}' target='blank'>https://www.youtube.com/watch?v={$datos["video"]}</a>";
-                $html .= "</td>";
-                $html .= "<td>";
-                    $html .= $datos["title"];
-                $html .= "</td>";
-                $html .= "<td class='text-center'>";
-                    $html .= $datos["order"];
-                $html .= "</td>";
+                $html = "<td><a href='https://www.youtube.com/watch?v={$datos["video"]}' target='blank'>https://www.youtube.com/watch?v={$datos["video"]}</a></td>";
+                $html .= "<td>{$datos["title"]}</td>";
+                $html .= "<td class='text-center'>{$datos["order"]}</td>";
                 $html .= '<td class="text-center">';
                     $html .= '<button type="button" class="btn btn-primary" onclick="edit(\'aplicacion\',' . $data["id"] . ')"><i class="material-icons">create</i></button> ';
                     $html .= '<button type="button" class="btn btn-danger" onclick="erase(\'aplicacion\',' . $data["id"] . ')"><i class="material-icons">delete</i></button>';
                 $html .= '</td>';
             break;
+            case "pfamilia":
+                $name = "{$url}/{$datos["image"]}";
+                
+                $html = "<td><img style='width:50px' src='{$name}' /></td>";
+                $html .= "<td>{$datos["title"]}</td>";
+                $html .= "<td class='text-center'>{$datos["order"]}</td>";
+                $html .= '<td class="text-center">';
+                    $html .= '<button type="button" class="btn btn-primary" onclick="edit(\'pfamilia\',' . $datos["id"] . ')"><i class="material-icons">create</i></button> ';
+                    $html .= '<button type="button" class="btn btn-danger" onclick="erase(\'pfamilia\',' . $datos["id"] . ')"><i class="material-icons">delete</i></button>';
+                $html .= '</td>';
+                break;
+                
         }
         return ["html" => $html, "id" => $data["id"]];
     }
@@ -187,22 +210,41 @@ class PageController extends Controller
             $file->move($path, $fileName);
             $datos["icon"] = "uploads/{$fileName}";
         }
+        if(isset($datos["image"])) {
+            $file = $request->file('image');
+            $extension = $file->getClientOriginalExtension();
+            $fileName = time() . '.' . $extension;
+            $path = public_path('img/uploads/');
+            $name = "{$url}/uploads/{$fileName}";
+            $file->move($path, $fileName);
+            $datos["image"] = "uploads/{$fileName}";
+        }
+        if(isset($datos["is_particular_input"]))
+            unset($datos["is_particular_input"]);
+        if(isset($datos["is_profesional_input"]))
+            unset($datos["is_profesional_input"]);
         switch($tipo) {
             case "ventaja":
                 $OBJ = Ventaja::create($datos);
                 $html = "<tr data-id='{$OBJ["id"]}'>";
-                    $html .= "<td>";
-                        $html .= "<img style='width:50px' src='{$name}' />";
-                    $html .= "</td>";
-                    $html .= "<td>";
-                        $html .= $datos["title"];
-                    $html .= "</td>";
-                    $html .= "<td class='text-center'>";
-                        $html .= $datos["order"];
-                    $html .= "</td>";
+                    $html .= "<td><img style='width:50px' src='{$name}' /></td>";
+                    $html .= "<td>{$datos["title"]}</td>";
+                    $html .= "<td class='text-center'>{$datos["order"]}</td>";
                     $html .= '<td class="text-center">';
                         $html .= '<button type="button" class="btn btn-primary" onclick="edit(\'ventaja\',' . $OBJ["id"] . ')"><i class="material-icons">create</i></button> ';
                         $html .= '<button type="button" class="btn btn-danger" onclick="erase(\'ventaja\',' . $OBJ["id"] . ')"><i class="material-icons">delete</i></button>';
+                    $html .= '</td>';
+                $html .= "</tr>";
+                break;
+            case "pfamilia":
+                $OBJ = Pfamilia::create($datos);
+                $html = "<tr data-id='{$OBJ["id"]}'>";
+                    $html .= "<td>{<img style='width:50px' src='{$name}' />}</td>";
+                    $html .= "<td>{$datos["title"]}</td>";
+                    $html .= "<td class='text-center'>{$datos["order"]}</td>";
+                    $html .= '<td class="text-center">';
+                        $html .= '<button type="button" class="btn btn-primary" onclick="edit(\'pfamilia\',' . $OBJ["id"] . ')"><i class="material-icons">create</i></button> ';
+                        $html .= '<button type="button" class="btn btn-danger" onclick="erase(\'pfamilia\',' . $OBJ["id"] . ')"><i class="material-icons">delete</i></button>';
                     $html .= '</td>';
                 $html .= "</tr>";
                 break;
@@ -210,15 +252,9 @@ class PageController extends Controller
                 $OBJ = Pregunta::create($datos);
 
                 $html = "<tr data-id='{$OBJ["id"]}'>";
-                    $html .= "<td>";
-                        $html .= $datos["pregunta"];
-                    $html .= "</td>";
-                    $html .= "<td>";
-                        $html .= $datos["respuesta"];
-                    $html .= "</td>";
-                    $html .= "<td class='text-center'>";
-                        $html .= $datos["order"];
-                    $html .= "</td>";
+                    $html .= "<td>{$datos["pregunta"]}</td>";
+                    $html .= "<td>{$datos["respuesta"]}</td>";
+                    $html .= "<td class='text-center'>{$datos["order"]}</td>";
                     $html .= '<td class="text-center">';
                         $html .= '<button type="button" class="btn btn-primary" onclick="edit(\'pregunta\',' . $OBJ["id"] . ')"><i class="material-icons">create</i></button> ';
                         $html .= '<button type="button" class="btn btn-danger" onclick="erase(\'pregunta\',' . $OBJ["id"] . ')"><i class="material-icons">delete</i></button>';
@@ -229,18 +265,33 @@ class PageController extends Controller
                 $OBJ = Aplicacion::create($datos);
 
                 $html = "<tr data-id='{$OBJ["id"]}'>";
-                    $html .= "<td>";
-                        $html .= "<a href='https://www.youtube.com/watch?v={$datos["video"]}' target='blank'>https://www.youtube.com/watch?v={$datos["video"]}</a>";
-                    $html .= "</td>";
-                    $html .= "<td>";
-                        $html .= $datos["title"];
-                    $html .= "</td>";
-                    $html .= "<td class='text-center'>";
-                        $html .= $datos["order"];
-                    $html .= "</td>";
+                    $html .= "<td>{<a href='https://www.youtube.com/watch?v={$datos["video"]}' target='blank'>https://www.youtube.com/watch?v={$datos["video"]}</a>}</td>";
+                    $html .= "<td>{$datos["title"]}</td>";
+                    $html .= "<td class='text-center'>{$datos["order"]}</td>";
                     $html .= '<td class="text-center">';
                         $html .= '<button type="button" class="btn btn-primary" onclick="edit(\'aplicacion\',' . $OBJ["id"] . ')"><i class="material-icons">create</i></button> ';
                         $html .= '<button type="button" class="btn btn-danger" onclick="erase(\'aplicacion\',' . $OBJ["id"] . ')"><i class="material-icons">delete</i></button>';
+                    $html .= '</td>';
+                $html .= "</tr>";
+                break;
+            case "trabajo":
+                $tipo = "";
+                $OBJ = Trabajo::create($datos);
+                $familia = Pfamilia::find($datos["pfamilia_id"]);
+                if($datos["is_profesional"]) $tipo .= "Profesional";
+                if($datos["is_particular"]) {
+                    if(!empty($tipo)) $tipo .= " y ";
+                    $tipo .= "Particular";
+                }
+                $html = "<tr data-id='{$OBJ["id"]}'>";
+                    $html .= "<td><img style='width:50px' src='{$name}' /></td>";
+                    $html .= "<td>{$datos["title"]}</td>";
+                    $html .= "<td>{$familia["title"]}</td>";
+                    $html .= "<td>{$tipo}</td>";
+                    $html .= "<td class='text-center'>{$datos["order"]}</td>";
+                    $html .= '<td class="text-center">';
+                        $html .= '<button type="button" class="btn btn-primary" onclick="edit(\'trabajo\',' . $OBJ["id"] . ')"><i class="material-icons">create</i></button> ';
+                        $html .= '<button type="button" class="btn btn-danger" onclick="erase(\'trabajo\',' . $OBJ["id"] . ')"><i class="material-icons">delete</i></button>';
                     $html .= '</td>';
                 $html .= "</tr>";
                 break;
@@ -261,6 +312,12 @@ class PageController extends Controller
                 break;
             case "aplicacion":
                 $data = Aplicacion::find($id);
+                break;
+            case "pfamilia":
+                $data = Pfamilia::find($id);
+                break;
+            case "trabajo":
+                $data = Trabajo::find($id);
                 break;
         }
         $data->delete();
