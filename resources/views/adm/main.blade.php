@@ -516,6 +516,76 @@
                                     html += '</div>';
                                     footer += '<button type="submit" class="btn btn-success">Editar</button>';
                                 break;
+                                case 'trabajo':
+                                    html += '<h4>Editar trabajo</h4>';
+                                    html += `<input name="tipo" type="hidden" value="${t}">`;
+                                    html += `<input type="hidden" value="${result.id}" id="frm_id" name="frm_id" />`;
+                                    html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
+                                    html += '<div class="container">';
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s6">';
+                                                html += '<label for="title">Título</label>';
+                                                html += `<input placeholder="Título" id="title" name="title" type="text" required="true" class="validate" value="${result.title}">`;
+                                            html += '</div>';
+                                            html += '<div class=" col s6">';
+                                                html += '<label for="order">Orden</label>';
+                                                html += `<input maxlength="3" placeholder="Orden" id="order" name="order" type="text" required="true" class="validate" value="${result.order}">`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="row">';
+                                            html += '<div class="input-field col s6">';
+                                                html += '<select name="pfamilia_id" required="true">';
+                                                    html += '<option value="" disabled selected>Seleccione</option>';
+                                                    for(var i in window.familias) {
+                                                        if(result.pfamilia_id == i)
+                                                            html += `<option selected value="${i}">${window.familias[i]}</option>`;
+                                                        else
+                                                            html += `<option value="${i}">${window.familias[i]}</option>`;
+                                                    }
+                                                html += '</select>';
+                                                html += '<label>Familia de producto</label>';
+                                            html += '</div>';
+                                            html += '<div class="input-field col s6">';
+                                                html += '<p style="margin-top:0;">';
+                                                    html += '<label>';
+                                                        if(parseInt(result.is_profesional))
+                                                            html += '<input type="checkbox" class="filled-in" name="is_profesional_input" checked/>';
+                                                        else
+                                                            html += '<input type="checkbox" class="filled-in" name="is_profesional_input" />';
+                                                        html += '<span>Profesional</span>';
+                                                    html += '</label>';
+                                                html += '</p>';
+                                                html += '<p style="margin-bottom:0;">';
+                                                    html += '<label>';
+                                                        if(parseInt(result.is_particular))
+                                                            html += '<input type="checkbox" class="filled-in" name="is_particular_input" checked/>';
+                                                        else
+                                                            html += '<input type="checkbox" class="filled-in" name="is_particular_input" />';
+                                                        html += '<span>Particular</span>';
+                                                    html += '</label>';
+                                                html += '</p>';
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="row">';
+                                            html += '<div class="file-field input-field col s12">';
+                                                html += '<div class="btn">';
+                                                    html += '<span>Imagen</span>';
+                                                    html += '<input type="file" id="image" name="image">';
+                                                html += '</div>';
+                                                html += '<div class="file-path-wrapper">';
+                                                    html += `<input class="file-path" required="true" value="${result.image}" id="image_text" name="image_text" type="text">`;
+                                                    html += '<span class="helper-text">Tamaño recomendado 400x400</span>';
+                                                html += '</div>';
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="row">';
+                                            html += '<div class="col s12">';
+                                                html += `<img style="width:96px; margin:0 auto;" onError="this.src='{{ asset('img/general/no-img.png') }}'" src="{{ asset('img/') }}/${result.image}" alt="Ícono ${result.id}" />`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                    html += '</div>';
+                                    footer += '<button type="submit" class="btn btn-success">Editar</button>';
+                                break;
                             }
                             
                             modal.find(".modal-content").html(html);
@@ -538,17 +608,17 @@
                 formData.append("_token", token);
                 
                 if(validar(t)) {
-                    if($(t).find(".add").length) {
-                        let tipo = $("[name='tipo']").val();
-                        if(tipo == "trabajo") {
-                            if(!$("[name='is_particular_input']").is(":checked") && !$("[name='is_profesional_input']").is(":checked")) {
-                                notificacion("Debe seleccionar un tipo de trabajo","error");
-                                return false;
-                            }
-                            formData.append("is_particular", ($("[name='is_particular_input']").is(":checked") ? 1 : 0));
-                            formData.append("is_profesional", ($("[name='is_profesional_input']").is(":checked") ? 1 : 0));
-                            
+                    let tipo = $("[name='tipo']").val();
+                    if(tipo == "trabajo") {
+                        if(!$("[name='is_particular_input']").is(":checked") && !$("[name='is_profesional_input']").is(":checked")) {
+                            notificacion("Debe seleccionar un tipo de trabajo","error");
+                            return false;
                         }
+                        formData.append("is_particular", ($("[name='is_particular_input']").is(":checked") ? 1 : 0));
+                        formData.append("is_profesional", ($("[name='is_profesional_input']").is(":checked") ? 1 : 0));
+                        
+                    }
+                    if($(t).find(".add").length) {
                         $.ajax({
                             url: t.action,
                             method: 'POST',

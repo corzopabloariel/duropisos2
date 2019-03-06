@@ -146,7 +146,7 @@
                             @endforeach
                         @else
                             <tr class="vacio">
-                                <td colspan="4">SIN DATOS</td>
+                                <td colspan="6">SIN DATOS</td>
                             </tr>
                         @endif
                     </tbody>

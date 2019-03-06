@@ -81,6 +81,9 @@ class PageController extends Controller
             case "pfamilia":
                 $data = Pfamilia::find($id);
                 break;
+            case "trabajo":
+                $data = Trabajo::find($id);
+                break;
         }
         return $data;
     }
@@ -109,45 +112,47 @@ class PageController extends Controller
             $image_text = $datos["image_text"];
             unset($datos["image_text"]);
         }
+        if(isset($datos["is_particular_input"]))
+            unset($datos["is_particular_input"]);
+        if(isset($datos["is_profesional_input"]))
+            unset($datos["is_profesional_input"]);
 
+        $data = self::data($tipo,$id);
         switch($tipo) {
             case "servicio":
-                $data = Servicio::find($id);
-                $datos["icon"] = $data["icon"];
-                break;
             case "ventaja":
-                $data = Ventaja::find($id);
                 $datos["icon"] = $data["icon"];
                 break;
             case "pfamilia":
-                $data = Pfamilia::find($id);
+            case "trabajo":
                 $datos["image"] = $data["image"];
-                break;
-            case "aplicacion":
-                $data = Aplicacion::find($id);
                 break;
         }
 
         if(!empty($icon_text)) {
             if(isset($datos["icon"])) {
                 $file = $request->file('icon');
-                $extension = $file->getClientOriginalExtension();
-                $fileName = time() . '.' . $extension;
-                $path = public_path('img/uploads/');
-                $name = $path . $fileName;
-                $file->move($path, $fileName);
-                $datos["icon"] = "uploads/{$fileName}";
+                if(!is_null($file)) {
+                    $extension = $file->getClientOriginalExtension();
+                    $fileName = time() . '.' . $extension;
+                    $path = public_path('img/uploads/');
+                    $name = $path . $fileName;
+                    $file->move($path, $fileName);
+                    $datos["icon"] = "uploads/{$fileName}";
+                }
             }
         }
         if(!empty($image_text)) {
             if(isset($datos["image"])) {
                 $file = $request->file('image');
-                $extension = $file->getClientOriginalExtension();
-                $fileName = time() . '.' . $extension;
-                $path = public_path('img/uploads/');
-                $name = $path . $fileName;
-                $file->move($path, $fileName);
-                $datos["image"] = "uploads/{$fileName}";
+                if(!is_null($file)) {
+                    $extension = $file->getClientOriginalExtension();
+                    $fileName = time() . '.' . $extension;
+                    $path = public_path('img/uploads/');
+                    $name = $path . $fileName;
+                    $file->move($path, $fileName);
+                    $datos["image"] = "uploads/{$fileName}";
+                }
             }
         }
         
@@ -183,6 +188,26 @@ class PageController extends Controller
                 $html .= '<td class="text-center">';
                     $html .= '<button type="button" class="btn btn-primary" onclick="edit(\'pfamilia\',' . $datos["id"] . ')"><i class="material-icons">create</i></button> ';
                     $html .= '<button type="button" class="btn btn-danger" onclick="erase(\'pfamilia\',' . $datos["id"] . ')"><i class="material-icons">delete</i></button>';
+                $html .= '</td>';
+                break;
+            case "trabajo":
+                $tipo = "";
+                $familia = Pfamilia::find($datos["pfamilia_id"]);
+                $name = "{$url}/{$datos["image"]}";
+                if($datos["is_profesional"]) $tipo .= "Profesional";
+                if($datos["is_particular"]) {
+                    if(!empty($tipo)) $tipo .= " y ";
+                    $tipo .= "Particular";
+                }
+                
+                $html = "<td><img style='width:50px' src='{$name}' /></td>";
+                $html .= "<td>{$datos["title"]}</td>";
+                $html .= "<td>{$familia["title"]}</td>";
+                $html .= "<td>{$tipo}</td>";
+                $html .= "<td class='text-center'>{$datos["order"]}</td>";
+                $html .= '<td class="text-center">';
+                    $html .= '<button type="button" class="btn btn-primary" onclick="edit(\'trabajo\',' . $datos["id"] . ')"><i class="material-icons">create</i></button> ';
+                    $html .= '<button type="button" class="btn btn-danger" onclick="erase(\'trabajo\',' . $datos["id"] . ')"><i class="material-icons">delete</i></button>';
                 $html .= '</td>';
                 break;
                 
