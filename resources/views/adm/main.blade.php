@@ -9,6 +9,9 @@
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,600,600i,800,900" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/af-2.3.2/b-1.5.4/b-colvis-1.5.4/b-html5-1.5.4/b-print-1.5.4/cr-1.5.0/fc-3.2.5/fh-3.1.4/kt-2.5.0/r-2.2.2/rg-1.1.0/rr-1.2.4/sc-1.5.0/sl-1.2.6/datatables.min.css"/>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+
         <!-- </Fonts> -->
         <!-- <Styles> -->
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -84,8 +87,7 @@
                         <div class="collapsible-header"><i class="material-icons">local_library</i>Distribuidores</div>
                         <div class="collapsible-body">
                             <ul>
-                                <li><a href="{{ route('add', ['seccion' => 'distribuidor']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Agregar distribuidor</a></li>
-                                <li><a href="{{ route('page', ['seccion' => 'distribuidor']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Editar contenido</a></li>
+                                <li><a href="{{ route('page', ['seccion' => 'distribuidor']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Agregar distribuidor</a></li>
                             </ul>
                         </div>
                     </li>
@@ -159,7 +161,7 @@
         <!-- <Script> -->
         <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
         <script src="{{ asset('js/materialize.js') }}"></script>
         <script src="{{ asset('js/messagebox.js') }}"></script>
         <script src="{{ asset('js/lobibox.js') }}"></script>
@@ -170,15 +172,65 @@
             $(".active").removeClass("active");
             $(`a[href="${url}"]`).closest("ul").closest("li").addClass("active");
             $(`a[href="${url}"]`).closest("li").addClass("active");
-            $(document).ready(function() {
-
+            $(document).on("ready", function() {
+                if($("#distribuidor").length) {
+                    let column = [];
+                    let columnDefs = [];
+                    columnDefs.push({"targets": [0], "className": "text-left text-uppercase"});
+                    columnDefs.push({"targets": [1], "className": "text-left text-uppercase"});
+                    columnDefs.push({"targets": [2], "className": "text-left text-uppercase"});
+                    columnDefs.push({"targets": [3], "className": "text-left text-uppercase"});
+                    columnDefs.push({"targets": [4], "className": "text-left"});
+                    columns.push({data:"local",title:"LOCAL"});
+                    columns.push({data:"direccion", title:"DIRECCIÓN"});
+                    columns.push({data:"localidad", title:"LOCALIDAD"});
+                    columns.push({data:"provincia", title:"PROVINCIA"});
+                    columns.push({data:"telefono", title:"TELÉFONO"});
+                    window["distribuidor"] = $("#distribuidor").DataTable({
+                        "processing": true,
+                        "pageLength": 10,
+                        "serverSide": true,
+                        "paging": true,
+                        "lengthChange": true,
+                        "responsive": true,
+                        "ajax": "{{ route('datatable') }}",
+                        "columns": column,
+                        "columnDefs": columnDefs,
+                        "fixedHeader": {
+                            header: false,
+                        },
+                        "select": 'single',
+                        "destroy": true,
+                        "order": [[ 0, "desc" ]],
+                        "searching": false,
+                        "dom": 'lBfrtip',
+                        "scrollX":true,
+                        "lengthMenu": [[10, 25, 50], [10, 25, 50]],
+                        "buttons": [],
+                        "language": translate_spanish
+                    });
+                }
             });
             M.AutoInit();
             
             $("#modal1").modal({
                 onOpenEnd: function(modal, trigger) {
-                    if($(".modal select").length) 
-                        $(".modal select").formSelect();
+                    $("#modal1").removeAttr("tabindex");
+                    if(window.provincias !== undefined) {
+                        $("#provincia_id").select2({
+                            data: window.provincias,
+                            width: 'resolve',
+                            placeholder: 'Seleccione Provincia',
+                            allowClear: true
+                        });
+                        $("#localidad_id").select2({
+                            width: 'resolve',
+                            placeholder: 'Seleccione Provincia',
+                        });
+                    } else {
+                        if($(".modal select").length) 
+                            $(".modal select").formSelect();
+                    }
                 }
             });
             //
@@ -357,6 +409,73 @@
                         html += '</div>';
                         footer += '<button type="submit" class="btn btn-success">Agregar</button>';
                     break;
+                    case 'servicio':
+                        modal.find("form").attr("action",url_add);
+                        html += '<h4>Agregar servicio integral</h4>';
+                        html += `<input name="tipo" type="hidden" value="${t}">`;
+                        html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
+                        html += '<div class="container add">';
+                            html += '<div class="row">';
+                                html += '<div class=" col s6">';
+                                    html += '<label for="title">Nombre</label>';
+                                    html += `<input placeholder="Nombre" id="title" name="title" type="text" required="true" class="validate">`;
+                                html += '</div>';
+                                html += '<div class=" col s6">';
+                                    html += '<label for="order">Orden</label>';
+                                    html += `<input maxlength="3" placeholder="Orden" id="order" name="order" type="text" required="true" class="validate">`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class="file-field input-field col s12">';
+                                    html += '<div class="btn">';
+                                        html += '<span>Imagen</span>';
+                                        html += '<input type="file" id="icon" name="icon">';
+                                    html += '</div>';
+                                    html += '<div class="file-path-wrapper">';
+                                        html += `<input class="file-path" required="true" id="icon_text" name="icon_text" type="text">`;
+                                        html += '<span class="helper-text">Tamaño recomendado 92x92</span>';
+                                    html += '</div>';
+                                html += '</div>';
+                            html += '</div>';
+                        html += '</div>';
+                        footer += '<button type="submit" class="btn btn-success">Agregar</button>';
+                    break;
+                    case "distribuidor":
+                        modal.find("form").attr("action",url_add);
+                        html += '<h4>Agregar distribuidor</h4>';
+                        html += `<input name="tipo" type="hidden" value="${t}">`;
+                        html += '<div class="container add">';
+                            html += '<div class="row">';
+                                html += '<div class=" col s12">';
+                                    html += '<label for="local">Local</label>';
+                                    html += `<input placeholder="Local" id="local" name="local" type="text" required="true" class="validate">`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class=" col s12">';
+                                    html += '<label for="direccion">Dirección</label>';
+                                    html += `<input placeholder="Dirección" id="direccion" name="direccion" type="text" required="true" class="validate">`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class=" col s6">';
+                                    html += '<label for="telefono">Teléfono</label>';
+                                    html += `<input placeholder="Teléfono" id="telefono" name="telefono" type="text" required="true" class="validate">`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class=" col s6">';
+                                    html += '<label for="provincia_id">Provincia</label>';
+                                    html += `<select onchange="buscarLocalidad(this)" id="provincia_id" name="provincia_id" required="true"><select>`;
+                                html += '</div>';
+                                html += '<div class=" col s6">';
+                                    html += '<label for="localidad_id">Localidad</label>';
+                                    html += `<select id="localidad_id" name="localidad_id" required="true"><select>`;
+                                html += '</div>';
+                            html += '</div>';
+                        html += '</div>';
+                        footer += '<button type="submit" class="btn btn-success">Agregar</button>';
+                    break;
                 }
                 modal.find(".modal-content").html(html);
                 modal.find(".modal-footer").html(footer);
@@ -402,13 +521,13 @@
                                                     html += '<input type="file" id="icon" name="icon">';
                                                 html += '</div>';
                                                 html += '<div class="file-path-wrapper">';
-                                                    html += `<input class="file-path validate" required="true" val="${result.icon}" id="icon_text" name="icon_text" type="text">`;
+                                                    html += `<input class="file-path validate" required="true" value="${result.icon}" id="icon_text" name="icon_text" type="text">`;
                                                 html += '</div>';
                                             html += '</div>';
                                         html += '</div>';
                                         html += '<div class="row">';
                                             html += '<div class="col s12">';
-                                                html += `<img onError="this.src='{{ asset('img/general/no-img.png') }}'" src="${result.icon}" alt="Ícono ${result.id}" />`;
+                                                html += `<img style="width:96px; margin:0 auto;" onError="this.src='{{ asset('img/general/no-img.png') }}'" src="{{ asset('img/') }}/${result.icon}" alt="Ícono ${result.id}" />`;
                                             html += '</div>';
                                         html += '</div>';
                                     html += '</div>';
@@ -629,11 +748,14 @@
                             beforeSend : function() {
                                 notificacion("Espere. Al finalizar la tabla se actualizará");
                             },
-                            success: function(data){
-                                if($("table").find(".vacio").length)
-                                    $("table").find(".vacio").remove();
-                                $("table").find("tbody").append(data);
-                                $("#modal1").modal("close");
+                            success: function(data) {
+                                if(tipo != "distribuidor") {
+                                    if($("table").find(".vacio").length)
+                                        $("table").find(".vacio").remove();
+                                    $("table").find("tbody").append(data);
+                                    $("#modal1").modal("close");
+                                } else
+                                    window.distribuidor.draw();
                             }
                         });
                         
@@ -675,6 +797,7 @@
                             case "ventaja":
                             case "aplicacion":
                             case "pfamilia":
+                            case "servicio":
                                 $("table tbody").html('<tr class="vacio"><td colspan="4">SIN DATOS</td></tr>');
                                 break;
                             case "trabajo":
@@ -686,6 +809,25 @@
                         url: url,
                         method: 'get',
                     });
+                });
+            }
+            buscarLocalidad = function(t) {
+                provincia = $(t).val();
+                $.ajax({
+                    url: `{{ url('/adm/buscar/localidad') }}/${provincia}`,
+                    method: 'get',
+                    dataType: 'json',
+                    beforeSend: function() {
+                        notificacion("Espere ...");
+                    },
+                    success: function(data) {
+                        $("#localidad_id").select2({
+                            data: data,
+                            width: 'resolve',
+                            placeholder: 'Seleccione Localidad',
+                            allowClear: true
+                        })
+                    }
                 });
             }
         </script>

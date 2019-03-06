@@ -90,7 +90,6 @@
 
 @section('body')
 <main>
-    {{-- @include('adm.templates.errors') --}}
     
     <div class="row" style="height: 100vh; margin-bottom:0;">
         <div class="d-flex" style="height: inherit">

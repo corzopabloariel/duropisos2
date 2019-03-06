@@ -1,0 +1,110 @@
+.bg_index {
+    background-image: url(../img/general/bg_index.jpg);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-color: #464646;
+}
+.img-profesional,
+.img-particular {
+    cursor: pointer;
+    display: inline-block;
+    color: #444444;
+}
+.img-profesional {
+}
+.img-profesional span {
+    background-image: url(../img/general/profesional.png);
+    background-position: center top;
+    width: 93px;
+    height: 116px;
+    display: inherit;
+}
+.img-particular {
+    margin-left: 2em;
+}
+.img-particular span {
+    background-image: url(../img/general/particular.png);
+    background-position: center top;
+    width: 96px;
+    height: 108px;
+    display: inherit;
+}
+.img-profesional:hover span,
+.img-particular:hover span {
+    background-position: center bottom;
+}
+.img-profesional:hover,
+.img-particular:hover {
+    color: #C11939;
+}
+.d-flex {
+    display: flex;
+}
+.align-items-center {
+    -ms-flex-align: center!important;
+    align-items: center!important;
+}
+.justify-content-center {
+    -ms-flex-pack: center!important;
+    justify-content: center!important;
+}
+.w-100 {
+    width: 100%;
+}
+.opacity-70 {
+    opacity: .7;
+}
+.bg-white {
+    background: #fff;
+}
+.bg-white-o {
+    background-color: rgba(255,255,255,.7);
+}
+.mx-auto {
+    margin: auto auto;
+}
+.m-0 {
+    margin:0;
+}
+.d-block {
+    display: block;
+}
+.text-center {
+    text-align: center;
+}
+.text-uppercase { 
+    text-transform: uppercase;
+}
+
+.text_hover:hover {
+    color: #C11939 !important;
+}
+.text_importante {
+    color: #163D88;
+}
+.text_principal_595959 {
+    color: #595959;
+}
+.text_principal_39373E {
+    color: #39373E;
+}
+.text_principal_444444 {
+    color: #444444;
+}
+.bg-btn-duro {
+    background-color: #C11939;
+}
+.bg-F9F9F9 {
+    background-color: #F9F9F9;
+}
+.nav {
+    background-color: #002E5D;
+}
+.footer {
+    background-color: #D9D9D9;
+}
+.p-3 {
+    padding:3em;
+}

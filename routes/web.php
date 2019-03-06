@@ -18,6 +18,9 @@ Route::get('login','Auth\LoginController@showLoginForm')->name('login');
 
 Route::post('login','Auth\LoginController@login');
 
+Route::get('profesional',['uses' => 'public\PageController@profesional' , 'as' => 'profesional']);
+Route::get('particular',['uses' => 'public\PageController@particular' , 'as' => 'particular']);
+
 // 'middleware' => 'auth'
 Route::group(['middleware' => 'auth', 'prefix' => 'adm'], function() {
     Route::get('/', 'admController@index');
@@ -28,10 +31,12 @@ Route::group(['middleware' => 'auth', 'prefix' => 'adm'], function() {
     Route::post('editdata', ['uses' => 'adm\PageController@editdata' , 'as' => 'editdata']);
     Route::post('adddata', ['uses' => 'adm\PageController@adddata' , 'as' => 'adddata']);
     Route::post('empresa', ['uses' => 'adm\EmpresaController@data', 'as' => 'empresa']);
+    Route::post('datatable', ['uses' => 'adm\EmpresaController@datatable', 'as' => 'datatable']);
 
     Route::get('logout', ['uses' => 'Auth\LoginController@logout' , 'as' => 'adm.logout']);
     Route::get('metadatos',['uses' => 'adm\MetadatosController@index', 'as' => 'metadatos']);
     Route::get('page/{seccion}', ['uses' => 'adm\PageController@edit', 'as' => 'page']);
+    Route::get('buscar/{tipo}/{id}', ['uses' => 'adm\PageController@search', 'as' => 'buscar']);
     Route::get('producto/{tipo}', ['uses' => 'adm\ProductoController@edit', 'as' => 'producto']);
     Route::get('productos',['uses' => 'adm\ProductosController@index', 'as' => 'productos']);
     Route::resource('aplicacion', 'adm\AplicacionController');

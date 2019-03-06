@@ -97,6 +97,14 @@ body {
 #page-wrapper > div > main {
     padding-top: 63px;
 }
+select#provincia_id,
+select#localidad_id {
+    display: block !important;
+}
+.selected td {
+    background-color: #163D88;
+    color: #fff;
+}
 .scroll > ul {
     border-top: none;
     border-left: none;

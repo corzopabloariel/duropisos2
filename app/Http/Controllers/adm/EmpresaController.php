@@ -5,6 +5,9 @@ namespace App\Http\Controllers\adm;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Empresa;
+use App\Distribuidor;
+use App\Provincia;
+use App\Localidad;
 
 class EmpresaController extends Controller
 {
@@ -105,5 +108,36 @@ class EmpresaController extends Controller
             }
         }
         return $obj;
+    }
+
+    public function datatable(Request $request) {
+        $params = $request->all();
+        $data = [];
+        $recordsTotal = $recordsFiltered = 0;
+        $limit = $params['length'];
+        $offset = $params['start'];
+        $Arr = Distribuidor::orderBy('local')
+            ->skip($offset*$limit)->take($limit)->get();
+            // ->offset()
+            // ->limit();
+            
+        $recordsTotal = Distribuidor::orderBy('local')->count();
+        $recordsFiltered = $recordsTotal;
+        
+        foreach($Arr AS $d) {
+            $localidad = Localidad::find($d["localidad_id"]);
+            $provincia = Provincia::find($d["provincia_id"]);
+            $d["localidad"] = $localidad["nombre"];
+            $d["provincia"] = $provincia["nombre"];
+            $data[] = $d;
+        }
+
+        $json_data = array(
+            "draw"            => intval( $params['draw'] ),
+            "recordsTotal"    => intval( $recordsTotal ),//// en Vista
+            "recordsFiltered" => intval( $recordsFiltered ),// en Total
+            "data"            => $data
+        );
+        echo json_encode($json_data);
     }
 }

@@ -15,10 +15,23 @@ use App\Pregunta;
 use App\Aplicacion;
 use App\Pfamilia;
 use App\Trabajo;
+use App\Provincia;
+use App\Localidad;
+use App\Distribuidor;
 use Mockery\Undefined;
 
 class PageController extends Controller
 {
+    public function search($tipo,$id) {
+
+        $ARRlocalidades = Localidad::where('provincia_id', $id)->orderBy('nombre')->pluck('nombre', 'id');
+        $localidades[] = ["id" => "","text" => ""];
+        foreach($ARRlocalidades AS $k => $v) {
+            $localidades[] = ["id" => $k,"text" => $v];
+        }
+
+        return $localidades;
+    }
     public function edit($seccion)
     {
         $seccion = $seccion;
@@ -28,6 +41,15 @@ class PageController extends Controller
                 $empresa = Empresa::first();
                 $servicios = Servicio::orderBy('order')->paginate(8);
                 return view('adm.page', compact('seccion','title','servicios','empresa'));
+                break;
+            case "distribuidor":
+                $provincias = [];
+                $ARRprovincias = Provincia::orderBy('id')->pluck('nombre', 'id');
+                $provincias[] = ["id" => "","text" => ""];
+                foreach($ARRprovincias AS $k => $v) {
+                    $provincias[] = ["id" => $k,"text" => $v];
+                }
+                return view('adm.page', compact('seccion','title','provincias'));
                 break;
             case "empresa":
                 $empresa = Empresa::first();
@@ -210,7 +232,16 @@ class PageController extends Controller
                     $html .= '<button type="button" class="btn btn-danger" onclick="erase(\'trabajo\',' . $datos["id"] . ')"><i class="material-icons">delete</i></button>';
                 $html .= '</td>';
                 break;
-                
+            case "servicio":
+                $name = "{$url}/{$datos["icon"]}";
+                $html = "<td><img style='width:50px' src='{$name}' /></td>";
+                $html .= "<td>{$datos["title"]}</td>";
+                $html .= "<td class='text-center'>{$datos["order"]}</td>";
+                $html .= '<td class="text-center">';
+                    $html .= '<button type="button" class="btn btn-primary" onclick="edit(\'servicio\',' . $datos["id"] . ')"><i class="material-icons">create</i></button> ';
+                    $html .= '<button type="button" class="btn btn-danger" onclick="erase(\'servicio\',' . $datos["id"] . ')"><i class="material-icons">delete</i></button>';
+                $html .= '</td>';
+                break;
         }
         return ["html" => $html, "id" => $data["id"]];
     }
@@ -320,31 +351,29 @@ class PageController extends Controller
                     $html .= '</td>';
                 $html .= "</tr>";
                 break;
+            case "servicio":
+                $OBJ = Servicio::create($datos);
+                $html = "<tr data-id='{$OBJ["id"]}'>";
+                    $html .= "<td><img style='width:50px' src='{$name}' /></td>";
+                    $html .= "<td>{$datos["title"]}</td>";
+                    $html .= "<td class='text-center'>{$datos["order"]}</td>";
+                    $html .= '<td class="text-center">';
+                        $html .= '<button type="button" class="btn btn-primary" onclick="edit(\'servicio\',' . $OBJ["id"] . ')"><i class="material-icons">create</i></button> ';
+                        $html .= '<button type="button" class="btn btn-danger" onclick="erase(\'servicio\',' . $OBJ["id"] . ')"><i class="material-icons">delete</i></button>';
+                    $html .= '</td>';
+                $html .= "</tr>";
+                break;
+            case "distribuidor":
+                $datos["longitud"] = 0;
+                $datos["latitud"] = 0;
+                Distribuidor::create($datos);
+                $html = "";
+                break;
         }
         return $html;
     }
     public function erase($tipo,$id) {
-        $data = null;
-        switch($tipo) {
-            case "servicio":
-                $data = Servicio::find($id);
-                break;
-            case "ventaja":
-                $data = Ventaja::find($id);
-                break;
-            case "pregunta":
-                $data = Pregunta::find($id);
-                break;
-            case "aplicacion":
-                $data = Aplicacion::find($id);
-                break;
-            case "pfamilia":
-                $data = Pfamilia::find($id);
-                break;
-            case "trabajo":
-                $data = Trabajo::find($id);
-                break;
-        }
+        $data = self::data($tipo,$id);
         $data->delete();
     }
 }

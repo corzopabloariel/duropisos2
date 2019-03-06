@@ -44,39 +44,37 @@
         </div>
         @break;
         @case("pregunta")
-        <div class="container">
-            <div class="card">
-                <div class="card-content">
-                    <span class="card-title">Preguntas<button onclick="addRegistro('pregunta')" class="btn right"><i class="fas fa-plus"></i></button></span>
-            
-                    <table>
-                        <thead>
-                            <th>Pregunta</th>
-                            <th>Respuesta</th>
-                            <th>Orden</th>
-                            <th style="width:150px">Acciones</th>
-                        </thead>
-                        <tbody>
-                            @if(count($preguntas) != 0)
-                                @foreach($preguntas as $pregunta)
-                                    <tr data-id="{{$pregunta['id']}}">
-                                        <td>{{$pregunta["pregunta"]}}</td>
-                                        <td>{{$pregunta["respuesta"]}}</td>
-                                        <td class="text-center">{{$pregunta["order"]}}</td>
-                                        <td class="text-center">
-                                            <button type="button" class="btn btn-primary" onclick="edit('pregunta',{{$pregunta['id']}})"><i class="material-icons">create</i></button>
-                                            <button type="button" class="btn btn-danger" onclick="erase('pregunta',{{$pregunta['id']}})"><i class="material-icons">delete</i></button>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
-                                <tr class="vacio">
-                                    <td colspan="4">SIN DATOS</td>
+        <div class="card">
+            <div class="card-content">
+                <span class="card-title">Preguntas<button onclick="addRegistro('pregunta')" class="btn right"><i class="fas fa-plus"></i></button></span>
+        
+                <table>
+                    <thead>
+                        <th>Pregunta</th>
+                        <th>Respuesta</th>
+                        <th>Orden</th>
+                        <th style="width:150px">Acciones</th>
+                    </thead>
+                    <tbody>
+                        @if(count($preguntas) != 0)
+                            @foreach($preguntas as $pregunta)
+                                <tr data-id="{{$pregunta['id']}}">
+                                    <td>{{$pregunta["pregunta"]}}</td>
+                                    <td>{{$pregunta["respuesta"]}}</td>
+                                    <td class="text-center">{{$pregunta["order"]}}</td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-primary" onclick="edit('pregunta',{{$pregunta['id']}})"><i class="material-icons">create</i></button>
+                                        <button type="button" class="btn btn-danger" onclick="erase('pregunta',{{$pregunta['id']}})"><i class="material-icons">delete</i></button>
+                                    </td>
                                 </tr>
-                            @endif
-                        </tbody>
-                    </table>
-                </div>
+                            @endforeach
+                        @else
+                            <tr class="vacio">
+                                <td colspan="4">SIN DATOS</td>
+                            </tr>
+                        @endif
+                    </tbody>
+                </table>
             </div>
         </div>
         @break;
