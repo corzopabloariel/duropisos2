@@ -8,9 +8,30 @@ use App\Empresa;
 use App\Distribuidor;
 use App\Provincia;
 use App\Localidad;
+use App\EmpresaDato;
+use App\EmpresaContacto;
 
 class EmpresaController extends Controller
 {
+    public function datos(Request $request) {
+        $title = "Página: " . strtoupper("datos de empresa");
+
+        $empresaData = EmpresaDato::first();
+        $empresaContacto = EmpresaContacto::first();
+
+        $provincia = Provincia::find($empresaData["provincia_id"]);
+        $localidad = Localidad::find($empresaData["localidad_id"]);
+        $empresaData["provincia_id"] = $provincia["nombre"];
+        $empresaData["localidad_id"] = $localidad["nombre"];
+        $provincias = [];
+        $ARRprovincias = Provincia::orderBy('id')->pluck('nombre', 'id');
+        $provincias[] = ["id" => "","text" => ""];
+        foreach($ARRprovincias AS $k => $v) {
+            $provincias[] = ["id" => $k,"text" => $v];
+        }
+
+        return view('adm.empresa.datos', compact('title','provincias','empresaData','empresaContacto'));
+    }
     public function data(Request $request) {
         $empresa = Empresa::first();
         $datos = $request->all();

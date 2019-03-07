@@ -18,19 +18,19 @@
         <link href="{{ asset('css/materialize.css') }}" rel="stylesheet" type="text/css" >
         <link href="{{ asset('css/messagebox.css') }}" rel="stylesheet" type="text/css" >
         <link href="{{ asset('css/lobibox.css') }}" rel="stylesheet" type="text/css" >
+        <link href="{{ asset('css/materialize-select2.css') }}" rel="stylesheet" type="text/css" >
         <link href="{{ asset('css/style.css') }}" rel="stylesheet" type="text/css" >
         <!-- </Styles> -->
     </head>
     <body>
         <ul id="nav-mobile" class="sidenav s12 m3 xl3 sidenav-fixed" style="padding: 0; height: 100%; overflow-y: hidden; background-color:#ededed;" role="navigation">
-            <li><img class="sidenav-img" src="{{ asset('img/logo/logo.png') }}"></li>
+            <li><img class="sidenav-img" src="{{ asset('img/logo/logotipo.png') }}"></li>
             <li class="no-padding scroll" style="height: calc(100% - 140.78px); overflow-x: auto">
                 <ul class="collapsible z-depth-0 no-margin">
                     <li class="active">
                         <div class="collapsible-header"><i class="material-icons">home</i>Home</div>
                         <div class="collapsible-body">
                             <ul>
-                                <li><a href="{{ route('slider.create', ['seccion' => 'home']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Crear Slider</a></li>
                                 <li><a href="{{ route('slider.edit', ['seccion' => 'home']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Editar Slider</a></li>
                                 <li><a href="{{ route('page', ['seccion' => 'home']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Editar contenido</a></li>
                             </ul>
@@ -40,7 +40,6 @@
                         <div class="collapsible-header"><i class="material-icons">view_day</i>Empresa</div>
                         <div class="collapsible-body">
                             <ul>
-                                <li><a href="{{ route('slider.create', ['seccion' => 'empresa']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Crear Slider</a></li>
                                 <li><a href="{{ route('slider.edit', ['seccion' => 'empresa']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Editar Slider</a></li>
                                 <li><a href="{{ route('page', ['seccion' => 'empresa']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Editar contenido</a></li>
                             </ul>
@@ -216,6 +215,11 @@
             $("#modal1").modal({
                 onOpenEnd: function(modal, trigger) {
                     $("#modal1").removeAttr("tabindex");
+                    if($("#modal1").find("#texto").length) {
+                        CKEDITOR.replace('texto');
+	                    CKEDITOR.config.width = '100%';
+                    }
+
                     if(window.provincias !== undefined) {
                         $("#provincia_id").select2({
                             data: window.provincias,
@@ -234,11 +238,152 @@
                 }
             });
             //
+            editEmpresa = function(t) {
+                let modal = $("#modal1");
+                let html = footer = "";
+                let url_add = "{{ url('/adm/adddataempresa/') }}";
+                modal.find("form").attr("action",url_add);
+                switch(t) {
+                    case 'data':
+                        html += `<input name="tipo" type="hidden" value="${t}">`;
+                        html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
+                        html += '<div class="container add">';
+                            html += '<div class="row">';
+                                html += '<div class=" col s12">';
+                                    html += '<label for="direccion">Domicilio</label>';
+                                    html += `<input placeholder="Domicilio" id="direccion" name="direccion" type="text" required="true" class="validate">`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class=" col s6">';
+                                    html += '<label for="provincia_id">Provincia</label>';
+                                    html += `<select onchange="buscarLocalidad(this)" id="provincia_id" name="provincia_id"></select>`;
+                                html += '</div>';
+                                html += '<div class=" col s6">';
+                                    html += '<label for="localidad_id">Provincia</label>';
+                                    html += `<select id="localidad_id" name="localidad_id"></select>`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class="file-field input-field col s12">';
+                                    html += '<div class="btn">';
+                                        html += '<span>Logotipo</span>';
+                                        html += '<input type="file" id="logotipo" name="logotipo">';
+                                    html += '</div>';
+                                    html += '<div class="file-path-wrapper">';
+                                        html += `<input class="file-path" id="logotipo_text" name="logotipo_text" type="text">`;
+                                    html += '</div>';
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class="file-field input-field col s12">';
+                                    html += '<div class="btn">';
+                                        html += '<span>Logotipo footer</span>';
+                                        html += '<input type="file" id="logotipoFooter" name="logotipoFooter">';
+                                    html += '</div>';
+                                    html += '<div class="file-path-wrapper">';
+                                        html += `<input class="file-path" id="logotipoFooter_text" name="logotipoFooter_text" type="text">`;
+                                    html += '</div>';
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class="file-field input-field col s12">';
+                                    html += '<div class="btn">';
+                                        html += '<span>Favicon</span>';
+                                        html += '<input type="file" id="favicon" name="favicon">';
+                                    html += '</div>';
+                                    html += '<div class="file-path-wrapper">';
+                                        html += `<input class="file-path" id="favicon_text" name="favicon_text" type="text">`;
+                                    html += '</div>';
+                                html += '</div>';
+                            html += '</div>';
+                        html += '</div>';
+                        footer += '<button type="submit" class="btn btn-success">Cambiar</button>';
+                    break;
+                    case "contacto":
+                        html += `<input name="tipo" type="hidden" value="${t}">`;
+                        html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
+                        html += '<div class="container add">';
+                            html += '<div class="row">';
+                                html += '<div class=" col s12">';
+                                    html += '<label for="email_1">Email 1</label>';
+                                    html += `<input placeholder="Email 1" id="email_1" name="email_1" type="email" required="true" class="validate">`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class=" col s12">';
+                                    html += '<label for="email_2">Email 2</label>';
+                                    html += `<input placeholder="Email 2" id="email_2" name="email_2" type="email" class="validate">`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class=" col s12">';
+                                    html += '<label for="telefono_1">Teléfono</label>';
+                                    html += `<input placeholder="Teléfono" id="telefono_1" name="telefono_1" type="text" required="true" class="validate">`;
+                                html += '</div>';
+                            html += '</div>';
+
+                            html += '<div class="row">';
+                                html += '<div class=" col s6">';
+                                    html += '<label for="facebook">Facebook</label>';
+                                    html += `<input placeholder="Facebook" id="facebook" name="facebook" type="text" class="validate">`;
+                                    html += '<span class="helper-text">Enlace completo</span>';
+                                html += '</div>';
+                                html += '<div class=" col s6">';
+                                    html += '<label for="instagram">Instagram</label>';
+                                    html += `<input placeholder="Instagram" id="instagram" name="instagram" type="text" class="validate">`;
+                                    html += '<span class="helper-text">Enlace completo</span>';
+                                html += '</div>';
+                            html += '</div>';
+                        html += '</div>';
+
+                        footer += '<button type="submit" class="btn btn-success">Cambiar</button>';
+                    break;
+                }
+                
+                modal.find(".modal-content").html(html);
+                modal.find(".modal-footer").html(footer);
+                modal.modal("open");
+            }
             addRegistro = function(t) {
                 let modal = $("#modal1");
                 let html = footer = "";
                 let url_add = "{{ url('/adm/adddata/') }}";
                 switch(t) {
+                    case 'sliderhome':
+                    case 'sliderempresa':
+                        modal.find("form").attr("action",url_add);
+                        html += '<h4>Agregar slider</h4>';
+                        html += `<input name="tipo" type="hidden" value="${t}">`;
+                        html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
+                        html += '<div class="container add">';
+                            html += '<div class="row">';
+                                html += '<div class=" col s12">';
+                                    html += '<label for="texto">Texto</label>';
+                                    html += `<textarea id="texto" name="texto"></textarea>`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class=" col s6">';
+                                    html += '<label for="first_name">Orden</label>';
+                                    html += `<input maxlength="3" placeholder="Orden" id="order" name="order" type="text" required="true" class="validate">`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class="file-field input-field col s12">';
+                                    html += '<div class="btn">';
+                                        html += '<span>Imagen</span>';
+                                        html += '<input type="file" id="image" name="image">';
+                                    html += '</div>';
+                                    html += '<div class="file-path-wrapper">';
+                                        html += `<input class="file-path" required="true" id="image_text" name="image_text" type="text">`;
+                                        // html += '<span class="helper-text">Tamaño recomendado 92x92</span>';
+                                    html += '</div>';
+                                html += '</div>';
+                            html += '</div>';
+                        html += '</div>';
+                        footer += '<button type="submit" class="btn btn-success">Agregar</button>';
+                    break;
                     case 'ventaja':
                         modal.find("form").attr("action",url_add);
                         html += '<h4>Agregar ventaja</h4>';
@@ -466,11 +611,11 @@
                             html += '<div class="row">';
                                 html += '<div class=" col s6">';
                                     html += '<label for="provincia_id">Provincia</label>';
-                                    html += `<select onchange="buscarLocalidad(this)" id="provincia_id" name="provincia_id" required="true"><select>`;
+                                    html += `<select onchange="buscarLocalidad(this)" id="provincia_id" name="provincia_id" required="true" style="width:100%"><select>`;
                                 html += '</div>';
                                 html += '<div class=" col s6">';
                                     html += '<label for="localidad_id">Localidad</label>';
-                                    html += `<select id="localidad_id" name="localidad_id" required="true"><select>`;
+                                    html += `<select id="localidad_id" name="localidad_id" required="true" style="width:100%"><select>`;
                                 html += '</div>';
                             html += '</div>';
                         html += '</div>';
@@ -528,6 +673,45 @@
                                         html += '<div class="row">';
                                             html += '<div class="col s12">';
                                                 html += `<img style="width:96px; margin:0 auto;" onError="this.src='{{ asset('img/general/no-img.png') }}'" src="{{ asset('img/') }}/${result.icon}" alt="Ícono ${result.id}" />`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                    html += '</div>';
+                                    footer += '<button type="submit" class="btn btn-success">Editar</button>';
+                                break;
+                                case 'slider':
+                                    html += '<h4>Editar slider</h4>';
+                                    html += `<input type="hidden" value="${result.id}" id="frm_id" name="frm_id" />`;
+                                    html += `<input name="tipo" type="hidden" value="${t}">`;
+                                    html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
+                                    html += '<div class="container">';
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s12">';
+                                                html += '<label for="texto">Texto</label>';
+                                                html += `<textarea id="texto" name="texto" required="true">${result.texto}</textarea>`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s6">';
+                                                html += '<label for="order">Orden</label>';
+                                                html += `<input maxlength="3" placeholder="Orden" id="order" name="order" type="text" required="true" class="validate" value="${result.order}">`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="row">';
+                                            html += '<div class="file-field input-field col s12">';
+                                                html += '<div class="btn">';
+                                                    html += '<span>Imagen</span>';
+                                                    html += `<input type="file" id="icon" name="icon">`;
+                                                html += '</div>';
+                                                html += '<div class="file-path-wrapper">';
+                                                    html += `<input class="file-path validate" value="${result.image}" required="true" type="text" id="icon_text" name="icon_text">`;
+                                                    // html += '<span class="helper-text">Tamaño recomendado 92x92</span>';
+                                                html += '</div>';
+                                            html += '</div>';
+                                        html += '</div>';
+                                        
+                                        html += '<div class="row">';
+                                            html += '<div class="col s12">';
+                                                html += `<img style="width:96px; margin:0 auto;" onError="this.src='{{ asset('img/general/no-img.png') }}'" src="{{ asset('img/') }}/${result.image}" alt="Ícono ${result.id}" />`;
                                             html += '</div>';
                                         html += '</div>';
                                     html += '</div>';
@@ -735,30 +919,49 @@
                         }
                         formData.append("is_particular", ($("[name='is_particular_input']").is(":checked") ? 1 : 0));
                         formData.append("is_profesional", ($("[name='is_profesional_input']").is(":checked") ? 1 : 0));
-                        
+                    }
+                    if(tipo == "sliderhome" || tipo == "sliderempresa" || tipo == "slider") {
+                        let value = CKEDITOR.instances['texto'].getData();
+                        formData.set("texto",value);
                     }
                     if($(t).find(".add").length) {
-                        $.ajax({
-                            url: t.action,
-                            method: 'POST',
-                            data:  formData,
-                            contentType: false,
-                            cache: false,
-                            processData: false,
-                            beforeSend : function() {
-                                notificacion("Espere. Al finalizar la tabla se actualizará");
-                            },
-                            success: function(data) {
-                                if(tipo != "distribuidor") {
-                                    if($("table").find(".vacio").length)
-                                        $("table").find(".vacio").remove();
-                                    $("table").find("tbody").append(data);
-                                    $("#modal1").modal("close");
-                                } else
-                                    window.distribuidor.draw();
-                            }
-                        });
-                        
+                        if(tipo == "data" || tipo == "contacto") {
+                            $.ajax({
+                                url: t.action,
+                                method: 'POST',
+                                data:  formData,
+                                contentType: false,
+                                cache: false,
+                                processData: false,
+                                beforeSend : function() {
+                                    notificacion("Espere. Al finalizar se recargará la vista");
+                                },
+                                success: function() {
+                                    location.reload()
+                                }
+                            });
+                        } else {
+                            $.ajax({
+                                url: t.action,
+                                method: 'POST',
+                                data:  formData,
+                                contentType: false,
+                                cache: false,
+                                processData: false,
+                                beforeSend : function() {
+                                    notificacion("Espere. Al finalizar la tabla se actualizará");
+                                },
+                                success: function(data) {
+                                    if(tipo != "distribuidor") {
+                                        if($("table").find(".vacio").length)
+                                            $("table").find(".vacio").remove();
+                                        $("table").find("tbody").append(data);
+                                        $("#modal1").modal("close");
+                                    } else
+                                        window.distribuidor.draw();
+                                }
+                            });
+                        }
                     } else {
                         $.ajax({
                             url: t.action,
@@ -798,6 +1001,7 @@
                             case "aplicacion":
                             case "pfamilia":
                             case "servicio":
+                            case "slider":
                                 $("table tbody").html('<tr class="vacio"><td colspan="4">SIN DATOS</td></tr>');
                                 break;
                             case "trabajo":

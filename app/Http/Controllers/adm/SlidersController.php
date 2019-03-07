@@ -15,17 +15,14 @@ class SlidersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($section)
-    {
-        $section = $section;
-        $title = "Crear slider: {$section}";
-        return view('adm.sliders.create', compact('section','title'));
-    }
 
     public function edit($section)
     {
+        $title = "Slider: " . strtoupper($section);
         $section = $section;
-        return view('adm.sliders.edit', compact('section'));
+        $sliders = Slider::where('tipo',$section)->get();
+        
+        return view('adm.sliders.edit', compact('section','title','sliders'));
     }
 
 }

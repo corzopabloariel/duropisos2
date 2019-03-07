@@ -5,35 +5,37 @@
 
 @section('body')
 <main>
-    <h3 class="title">Editar slider: {{$section}}</h3>
     <div class="container">
         <div class="card">
             <div class="card-content">
-                {{-- <form action="">
-                    <div class="row">
-                        <div class="col s12">
-                            <label style="font-size:2em" class="grey-text text-darken-4">Texto</label>
-                            <textarea tabindex="1" id="frm_texto" name="frm_texto"></textarea>
-                        </div>
-                        <div class="file-field input-field col s12">
-                            <div class="btn">
-                                <span>Imagen</span>
-                                <input type="file">
-                            </div>
-                            <div class="file-path-wrapper">
-                                <input class="file-path validate" type="text">
-                                <span class="helper-text" data-error="wrong" data-success="right">Tamaño recomendado 1400x720</span>
-                            </div>
-                        </div>
-                        <div class="input-field col s12">
-                            <label>Orden</label>
-                            <input type="text" id="frm_orden" name="frm_orden" />
-                        </div>
-                        <div class="col s12" style="padding-bottom: 0;">
-                            <button class="waves-effect waves-light btn">Crear</button>
-                        </div>
-                    </div>
-                </form> --}}
+                <span class="card-title">Slider<button onclick="addRegistro('slider{{$section}}')" class="btn right"><i class="fas fa-plus"></i></button></span>
+                <table>
+                    <thead>
+                        <th>Imagen</th>
+                        <th>Texto</th>
+                        <th>Orden</th>
+                        <th style="width:150px">Acciones</th>
+                    </thead>
+                    <tbody>
+                        @if(count($sliders) != 0)
+                            @foreach($sliders as $slider)
+                                <tr data-id="{{$slider['id']}}">
+                                    <td><img src="{{ asset('img/').'/'.$slider['image'] }}" style="height:50px;" /></td>
+                                    <td>{!! $slider["texto"] !!}</td>
+                                    <td class="text-center">{{$slider["order"]}}</td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-primary" onclick="edit('slider',{{$slider['id']}})"><i class="material-icons">create</i></button>
+                                        <button type="button" class="btn btn-danger" onclick="erase('slider',{{$slider['id']}})"><i class="material-icons">delete</i></button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @else
+                            <tr class="vacio">
+                                <td colspan="4">SIN DATOS</td>
+                            </tr>
+                        @endif
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -41,7 +43,6 @@
 
 <script src="//cdn.ckeditor.com/4.7.3/full/ckeditor.js"></script>
 <script>
-	// CKEDITOR.replace('frm_texto');
-	// CKEDITOR.config.width = '100%';
+	// 
 </script>
 @endsection

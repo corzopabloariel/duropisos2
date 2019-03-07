@@ -1,3 +1,8 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+}
+
 .bg_index {
     background-image: url(../img/general/bg_index.jpg);
     background-position: center center;
@@ -74,6 +79,9 @@
 .text-center {
     text-align: center;
 }
+.text-right {
+    text-align: right;
+}
 .text-uppercase { 
     text-transform: uppercase;
 }
@@ -107,4 +115,36 @@
 }
 .p-3 {
     padding:3em;
+}
+.ul-separado li + li {
+    margin-top: .7em;
+}
+nav ul {
+    text-align: center;
+}
+nav ul li {
+    float: none;
+    display: inline-block;
+}
+
+header img {
+    height: 76px;
+}
+header .row {
+    padding: 2em 0;
+}
+footer {
+    font-size:75%;
+}
+footer a {
+    color: inherit;
+}
+footer img {
+    width: 100%;
+}
+footer p {
+    margin-top:0;
+}
+footer ul {
+    margin-bottom:0;
 }

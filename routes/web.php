@@ -18,8 +18,8 @@ Route::get('login','Auth\LoginController@showLoginForm')->name('login');
 
 Route::post('login','Auth\LoginController@login');
 
-Route::get('profesional',['uses' => 'public\PageController@profesional' , 'as' => 'profesional']);
-Route::get('particular',['uses' => 'public\PageController@particular' , 'as' => 'particular']);
+Route::get('profesional',['uses' => 'pub\PageController@profesional' , 'as' => 'profesional']);
+Route::get('particular',['uses' => 'pub\PageController@particular' , 'as' => 'particular']);
 
 // 'middleware' => 'auth'
 Route::group(['middleware' => 'auth', 'prefix' => 'adm'], function() {
@@ -30,7 +30,10 @@ Route::group(['middleware' => 'auth', 'prefix' => 'adm'], function() {
     Route::post('titulo', ['uses' => 'adm\PageController@titulo' , 'as' => 'titulo']);
     Route::post('editdata', ['uses' => 'adm\PageController@editdata' , 'as' => 'editdata']);
     Route::post('adddata', ['uses' => 'adm\PageController@adddata' , 'as' => 'adddata']);
+    Route::post('adddataempresa', ['uses' => 'adm\PageController@adddataempresa' , 'as' => 'adddataempresa']);
+    
     Route::post('empresa', ['uses' => 'adm\EmpresaController@data', 'as' => 'empresa']);
+    Route::get('empresa', ['uses' => 'adm\EmpresaController@datos', 'as' => 'empresa']);
     Route::post('datatable', ['uses' => 'adm\EmpresaController@datatable', 'as' => 'datatable']);
 
     Route::get('logout', ['uses' => 'Auth\LoginController@logout' , 'as' => 'adm.logout']);
@@ -43,7 +46,6 @@ Route::group(['middleware' => 'auth', 'prefix' => 'adm'], function() {
     Route::get('add/{seccion}', ['uses' => 'adm\AddController@index', 'as' => 'add']);
 
     Route::group(['prefix' => 'slider', 'as' => 'slider'], function() {
-        Route::get('{seccion}/create', ['uses' => 'adm\SlidersController@create', 'as' => '.create']);
         Route::get('{seccion}/edit', ['uses' => 'adm\SlidersController@edit', 'as' => '.edit']);
     });
     // ['uses' => 'adm\PageController@edit', 'as' => '.edit']

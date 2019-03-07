@@ -18,6 +18,9 @@ use App\Trabajo;
 use App\Provincia;
 use App\Localidad;
 use App\Distribuidor;
+use App\EmpresaDato;
+use App\EmpresaContacto;
+use App\Slider;
 use Mockery\Undefined;
 
 class PageController extends Controller
@@ -106,6 +109,9 @@ class PageController extends Controller
             case "trabajo":
                 $data = Trabajo::find($id);
                 break;
+            case "slider":
+                $data = Slider::find($id);
+                break;
         }
         return $data;
     }
@@ -147,6 +153,7 @@ class PageController extends Controller
                 break;
             case "pfamilia":
             case "trabajo":
+            case "slider":
                 $datos["image"] = $data["image"];
                 break;
         }
@@ -181,6 +188,17 @@ class PageController extends Controller
         $data->fill($datos);
         $data->save();
         switch($tipo) {
+            case "slider":
+                $name = "{$url}/{$datos["image"]}";
+                
+                $html = "<td><img style='width:50px' src='{$name}' /></td>";
+                $html .= "<td>{$datos["texto"]}</td>";
+                $html .= "<td class='text-center'>{$datos["order"]}</td>";
+                $html .= '<td class="text-center">';
+                    $html .= '<button type="button" class="btn btn-primary" onclick="edit(\'slider\',' . $data["id"] . ')"><i class="material-icons">create</i></button> ';
+                    $html .= '<button type="button" class="btn btn-danger" onclick="erase(\'slider\',' . $data["id"] . ')"><i class="material-icons">delete</i></button>';
+                $html .= '</td>';
+            break;
             case "ventaja":
                 $name = "{$url}/{$datos["icon"]}";
                 
@@ -245,6 +263,74 @@ class PageController extends Controller
         }
         return ["html" => $html, "id" => $data["id"]];
     }
+    public function adddataempresa(Request $request) {
+        $datos = $request->all();
+        $tipo = $datos["tipo"];
+        unset($datos["tipo"]);
+        unset($datos["_token"]);
+        $html = $url = "";
+        if($tipo == "data") {
+            if(isset($datos["url"])) {
+                $url = $datos["url"];
+                unset($datos["url"]);
+            }
+            $data = EmpresaDato::first();
+            if(!empty($data)) {
+                $datos["logo_principal"] = $data["logo_principal"];
+                $datos["logo_footer"] = $data["logo_footer"];
+                $datos["favicon"] = $data["favicon"];
+            }
+            if(isset($datos["logotipo"])) {
+                $file = $request->file('logotipo');
+                if(!is_null($file)) {
+                    $extension = $file->getClientOriginalExtension();
+                    $fileName = "logotipo.{$extension}";
+                    $path = public_path('img/logo/');
+                    $name = "{$url}/logo/{$fileName}";
+                    $file->move($path, $fileName);
+                    $datos["logo_principal"] = "logo/{$fileName}";
+                }
+            }
+            if(isset($datos["logotipoFooter"])) {
+                $file = $request->file('logotipoFooter');
+                if(!is_null($file)) {
+                    $extension = $file->getClientOriginalExtension();
+                    $fileName = "logotipoFooter.{$extension}";
+                    $path = public_path('img/logo/');
+                    $name = "{$url}/logo/{$fileName}";
+                    $file->move($path, $fileName);
+                    $datos["logo_footer"] = "logo/{$fileName}";
+                }
+            }
+            if(isset($datos["favicon"])) {
+                $file = $request->file('favicon');
+                if(!is_null($file)) {
+                    $extension = $file->getClientOriginalExtension();
+                    $fileName = "favicon.{$extension}";
+                    $path = public_path('img/logo/');
+                    $name = "{$url}/logo/{$fileName}";
+                    $file->move($path, $fileName);
+                    $datos["favicon"] = "logo/{$fileName}";
+                }
+            }
+            
+            if(empty($data)) {
+                EmpresaDato::create($datos);
+            } else {
+                $data->fill($datos);
+                $data->save();
+            }
+        } else {
+            $data = EmpresaContacto::first();
+
+            if(empty($data)) {
+                EmpresaContacto::create($datos);
+            } else {
+                $data->fill($datos);
+                $data->save();
+            }
+        }
+    }
     public function adddata(Request $request) {
         $datos = $request->all();
         $tipo = $datos["tipo"];
@@ -280,6 +366,32 @@ class PageController extends Controller
         if(isset($datos["is_profesional_input"]))
             unset($datos["is_profesional_input"]);
         switch($tipo) {
+            case "sliderhome":
+                $datos["tipo"] = "home";
+                $OBJ = Slider::create($datos);
+                $html = "<tr data-id='{$OBJ["id"]}'>";
+                    $html .= "<td><img style='width:50px' src='{$name}' /></td>";
+                    $html .= "<td>{$datos["texto"]}</td>";
+                    $html .= "<td class='text-center'>{$datos["order"]}</td>";
+                    $html .= '<td class="text-center">';
+                        $html .= '<button type="button" class="btn btn-primary" onclick="edit(\'slider\',' . $OBJ["id"] . ')"><i class="material-icons">create</i></button> ';
+                        $html .= '<button type="button" class="btn btn-danger" onclick="erase(\'slider\',' . $OBJ["id"] . ')"><i class="material-icons">delete</i></button>';
+                    $html .= '</td>';
+                $html .= "</tr>";
+                break;
+            case "sliderempresa":
+                $datos["tipo"] = "empresa";
+                $OBJ = Slider::create($datos);
+                $html = "<tr data-id='{$OBJ["id"]}'>";
+                    $html .= "<td><img style='width:50px' src='{$name}' /></td>";
+                    $html .= "<td>{$datos["texto"]}</td>";
+                    $html .= "<td class='text-center'>{$datos["order"]}</td>";
+                    $html .= '<td class="text-center">';
+                        $html .= '<button type="button" class="btn btn-primary" onclick="edit(\'slider\',' . $OBJ["id"] . ')"><i class="material-icons">create</i></button> ';
+                        $html .= '<button type="button" class="btn btn-danger" onclick="erase(\'slider\',' . $OBJ["id"] . ')"><i class="material-icons">delete</i></button>';
+                    $html .= '</td>';
+                $html .= "</tr>";
+                break;
             case "ventaja":
                 $OBJ = Ventaja::create($datos);
                 $html = "<tr data-id='{$OBJ["id"]}'>";
