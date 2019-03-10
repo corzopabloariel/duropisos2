@@ -16,7 +16,7 @@ class CreatePreguntaTable extends Migration
         Schema::create('preguntas', function (Blueprint $table) {
             $table->increments('id');
             $table->string('pregunta')->nullable();
-            $table->string('respuesta')->nullable();
+            $table->text('respuesta')->nullable();
             $table->string('order',3)->nullable();
             $table->timestamps();
         });

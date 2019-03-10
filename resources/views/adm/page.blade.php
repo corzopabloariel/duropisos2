@@ -123,7 +123,7 @@
                 <div class="card-content">
                     <span class="card-title">Empresa</span>
 
-                    <form id="formEmpresa" action="{{ url('/adm/empresa/') }}" method="POST" onsubmit="event.preventDefault(); empresa(this);" novalidate>
+                    <form id="formEmpresa" action="{{ url('/adm/admempresa/') }}" method="POST" onsubmit="event.preventDefault(); empresa(this);" novalidate>
                         @csrf
                         @method('POST')
                         <input type="hidden" id="frm_tipo" name="frm_tipo" value="{{ $seccion }}"/>
@@ -285,8 +285,8 @@
             text: '<i class="fas fa-eye"></i>',
             className: 'btn-dark',
             action: function ( e, dt, node, config ) {
-                let rows = dt.rows( { selected: true } ).count();
-                userDATOS.show__(window[nombre_tabla],OBJ_pyrus);
+                let rows = dt.rows( { selected: true } ).data()[0];
+                edit('distribuidor',rows.id);
             }
         });
 	
@@ -295,8 +295,8 @@
             text: '<i class="fas fa-trash-alt"></i>',
             className: 'btn-danger',
             action: function ( e, dt, node, config ) {
-                let rows = dt.rows( { selected: true } ).count();
-                userDATOS.delete__(window[nombre_tabla],OBJ_pyrus);
+                let rows = dt.rows( { selected: true } ).data()[0];
+                erase('distribuidor',rows.id);
             }
         });
         window["distribuidor"] = $("#distribuidor").DataTable({

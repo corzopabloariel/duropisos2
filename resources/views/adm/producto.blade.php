@@ -45,9 +45,10 @@
         @case('uno')
             <div class="card">
                 <div class="card-content">
-                    <span class="card-title">Productos<button class="btn right"><i class="material-icons">add_circle</i></button></span>
+                    <span class="card-title">Productos<button onclick="addRegistro('producto')" class="btn right"><i class="fas fa-plus"></i></button></span>
                     <table class="striped">
                         <thead>
+                            <th>Código</th>
                             <th>Imagen</th>
                             <th>Título</th>
                             <th>Familia</th>
@@ -55,17 +56,25 @@
                             <th class="text-center">Acciones</th>
                         </thead>
                         <tbody>
-                            {{-- @foreach($familias as $familia)
-                                <tr>
-                                    <td></td>
-                                    <td>{{$familia["title"]}}</td>
-                                    <td class="text-center">{{$familia["order"]}}</td>
+                            @if(count($productos) != 0)
+                            @foreach($productos as $producto)
+                                <tr data-id="{{$producto['id']}}">
+                                    <td>{{$producto["codigo"]}}</td>
+                                    <td><img src="{{ asset('img/').'/'.$producto['image'] }}" style="height:50px;" /></td>
+                                    <td>{{$producto["name"]}}</td>
+                                    <td>{{$familias[$producto["pfamilia_id"]]}}</td>
+                                    <td class="text-center">{{$producto["order"]}}</td>
                                     <td class="text-center">
-                                        <button type="button" class="btn btn-primary" onclick="edit('familia',{{$familia['id']}})"><i class="material-icons">create</i></button>
-                                        <button type="button" class="btn btn-danger"><i class="material-icons">delete</i></button>
+                                        <button type="button" class="btn btn-primary" onclick="edit('producto',{{$producto['id']}})"><i class="material-icons">create</i></button>
+                                        <button type="button" class="btn btn-danger" onclick="erase('producto',{{$producto['id']}})"><i class="material-icons">delete</i></button>
                                     </td>
                                 </tr>
-                            @endforeach --}}
+                            @endforeach
+                            @else
+                            <tr class="vacio">
+                                <td colspan="6">SIN DATOS</td>
+                            </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -73,4 +82,8 @@
             @break;
     @endswitch
 </main>
+<script src="//cdn.ckeditor.com/4.7.3/full/ckeditor.js"></script>
+<script>
+    window.familias = {!! json_encode($familias) !!};
+</script>
 @endsection

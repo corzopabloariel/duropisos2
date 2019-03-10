@@ -14,6 +14,7 @@ use App\Ventaja;
 use App\Pregunta;
 use App\Aplicacion;
 use App\Pfamilia;
+use App\Producto;
 use App\Trabajo;
 use App\Provincia;
 use App\Localidad;
@@ -21,6 +22,7 @@ use App\Distribuidor;
 use App\EmpresaDato;
 use App\EmpresaContacto;
 use App\Slider;
+use App\Colorproducto;
 use Mockery\Undefined;
 
 class PageController extends Controller
@@ -94,6 +96,12 @@ class PageController extends Controller
     public function data($tipo,$id) {
         $data = null;
         switch($tipo) {
+            case "contacto":
+                $data = EmpresaContacto::first();
+                break;
+            case "data":
+                $data = EmpresaDato::first();
+                break;
             case "servicio":
                 $data = Servicio::find($id);
                 break;
@@ -111,6 +119,16 @@ class PageController extends Controller
                 break;
             case "slider":
                 $data = Slider::find($id);
+                break;
+            case "producto":
+                $data = Producto::find($id);
+                $data["colores"] = Producto::find($id)->colores;
+                break;
+            case "pregunta":
+                $data = Pregunta::find($id);
+                break;
+            case "distribuidor":
+                $data = Distribuidor::find($id);
                 break;
         }
         return $data;
@@ -154,16 +172,27 @@ class PageController extends Controller
             case "pfamilia":
             case "trabajo":
             case "slider":
+            case "producto":
                 $datos["image"] = $data["image"];
                 break;
         }
-
+        if($tipo == "pfamilia") {
+            $datos["url"] = self::limpiarCaracteresEspeciales($datos["title"]);
+            $datos["url"] = str_replace(" ","_",$datos["url"]);
+            $datos["url"] = strtolower($datos["url"]);
+        }
+        if($tipo == "producto")
+            unset($data["colores"]);
         if(!empty($icon_text)) {
             if(isset($datos["icon"])) {
                 $file = $request->file('icon');
                 if(!is_null($file)) {
                     $extension = $file->getClientOriginalExtension();
                     $fileName = time() . '.' . $extension;
+                    if(!empty($datos["icon"])) {///SACO el nombre de la base
+                        list($p,$f) = explode("/",$datos["icon"]);
+                        $fileName = $f;
+                    }
                     $path = public_path('img/uploads/');
                     $name = $path . $fileName;
                     $file->move($path, $fileName);
@@ -177,6 +206,10 @@ class PageController extends Controller
                 if(!is_null($file)) {
                     $extension = $file->getClientOriginalExtension();
                     $fileName = time() . '.' . $extension;
+                    if(!empty($datos["image"])) {
+                        list($p,$f) = explode("/",$datos["image"]);
+                        $fileName = $f;
+                    }
                     $path = public_path('img/uploads/');
                     $name = $path . $fileName;
                     $file->move($path, $fileName);
@@ -189,7 +222,7 @@ class PageController extends Controller
         $data->save();
         switch($tipo) {
             case "slider":
-                $name = "{$url}/{$datos["image"]}";
+                $name = "{$url}/{$datos["image"]}?time=" . time();
                 
                 $html = "<td><img style='width:50px' src='{$name}' /></td>";
                 $html .= "<td>{$datos["texto"]}</td>";
@@ -199,8 +232,71 @@ class PageController extends Controller
                     $html .= '<button type="button" class="btn btn-danger" onclick="erase(\'slider\',' . $data["id"] . ')"><i class="material-icons">delete</i></button>';
                 $html .= '</td>';
             break;
+            case "producto":
+                $cantidad = $datos["cantidadColor"];
+                $Arr_colores = [];
+                unset($datos["cantidadColor"]);
+                for($i = 1; $i <= $cantidad; $i++) {
+                    if(!isset($datos["title-{$i}"]))
+                        continue;
+                    $image = NULL;
+                    if(isset($datos["image-{$i}"])) {
+                        if(!empty($datos["image-{$i}"])) {
+                            $image = $datos["image-{$i}"];
+                            unset($datos["image-{$i}"]);
+                        }
+                    }
+                    // print_r($image);die();
+                    $arr = [];
+                    $arr["id"] = $datos["id-{$i}"];
+                    $arr["name"] = $datos["title-{$i}"];
+                    $arr["code"] = $datos["codigo-{$i}"];
+                    $arr["order"] = $datos["order-{$i}"];
+                    $arr["descripcion"] = $datos["descripcion-{$i}"];
+                    try {
+                        $arr["image"] = image;
+                    } catch (\Throwable $th) {
+                        $arr["image"] = NULL;
+                    }
+                    $arr["image_text"] = $datos["image_text-{$i}"];
+                    $Arr_colores[] = $arr;
+                    unset($datos["id-{$i}"]);
+                    unset($datos["title-{$i}"]);
+                    unset($datos["codigo-{$i}"]);
+                    unset($datos["descripcion-{$i}"]);
+                    unset($datos["image_text-{$i}"]);
+                    // print_r($Arr_colores);
+                }
+                for($i = 0; $i < count($Arr_colores); $i++) {
+                    $color = Colorproducto::find($Arr_colores[$i]["id"]);
+                    $file = $Arr_colores[$i]["image"];
+                    $Arr_colores[$i]["image"] = $color["image"];
+                    if(!is_null($file)) {
+                        $extension = $file->getClientOriginalExtension();
+                        $fileName = strtoupper($Arr_colores[$i]["code"]) . '-' . str_replace(" ","_",$Arr_colores[$i]["name"]) . '.' . $extension;
+                        $path = public_path('img/uploads/');
+                        $name = "{$url}/uploads/{$fileName}";
+                        $file->move($path, $fileName);
+                        $Arr_colores[$i]["image"] = "uploads/{$fileName}";
+                    }
+                    $color->fill($Arr_colores[$i]);
+                    $color->save();
+                }
+
+                $name = "{$url}/{$datos["image"]}?time=" . time();
+                $familia = Pfamilia::find($datos["pfamilia_id"])["title"];
+                $html = "<td>{$datos["codigo"]}</td>";
+                $html .= "<td><img style='width:50px' src='{$name}' /></td>";
+                $html .= "<td>{$datos["name"]}</td>";
+                $html .= "<td class='text-center'>{$familia}</td>";
+                $html .= "<td class='text-center'>{$datos["order"]}</td>";
+                $html .= '<td class="text-center">';
+                    $html .= '<button type="button" class="btn btn-primary" onclick="edit(\'producto\',' . $data["id"] . ')"><i class="material-icons">create</i></button> ';
+                    $html .= '<button type="button" class="btn btn-danger" onclick="erase(\'producto\',' . $data["id"] . ')"><i class="material-icons">delete</i></button>';
+                $html .= '</td>';
+            break;
             case "ventaja":
-                $name = "{$url}/{$datos["icon"]}";
+                $name = "{$url}/{$datos["icon"]}?time=" . time();
                 
                 $html = "<td><img style='width:50px' src='{$name}' /></td>";
                 $html .= "<td>{$datos["title"]}</td>";
@@ -220,7 +316,7 @@ class PageController extends Controller
                 $html .= '</td>';
             break;
             case "pfamilia":
-                $name = "{$url}/{$datos["image"]}";
+                $name = "{$url}/{$datos["image"]}?time=" . time();
                 
                 $html = "<td><img style='width:50px' src='{$name}' /></td>";
                 $html .= "<td>{$datos["title"]}</td>";
@@ -233,7 +329,7 @@ class PageController extends Controller
             case "trabajo":
                 $tipo = "";
                 $familia = Pfamilia::find($datos["pfamilia_id"]);
-                $name = "{$url}/{$datos["image"]}";
+                $name = "{$url}/{$datos["image"]}?time=" . time();
                 if($datos["is_profesional"]) $tipo .= "Profesional";
                 if($datos["is_particular"]) {
                     if(!empty($tipo)) $tipo .= " y ";
@@ -251,7 +347,7 @@ class PageController extends Controller
                 $html .= '</td>';
                 break;
             case "servicio":
-                $name = "{$url}/{$datos["icon"]}";
+                $name = "{$url}/{$datos["icon"]}?time=" . time();
                 $html = "<td><img style='width:50px' src='{$name}' /></td>";
                 $html .= "<td>{$datos["title"]}</td>";
                 $html .= "<td class='text-center'>{$datos["order"]}</td>";
@@ -260,8 +356,26 @@ class PageController extends Controller
                     $html .= '<button type="button" class="btn btn-danger" onclick="erase(\'servicio\',' . $datos["id"] . ')"><i class="material-icons">delete</i></button>';
                 $html .= '</td>';
                 break;
+            case "pregunta":
+                $html = "<td>{$datos["pregunta"]}</td>";
+                $html .= "<td>{$datos["respuesta"]}</td>";
+                $html .= "<td class='text-center'>{$datos["order"]}</td>";
+                $html .= '<td class="text-center">';
+                    $html .= '<button type="button" class="btn btn-primary" onclick="edit(\'pregunta\',' . $datos["id"] . ')"><i class="material-icons">create</i></button> ';
+                    $html .= '<button type="button" class="btn btn-danger" onclick="erase(\'pregunta\',' . $datos["id"] . ')"><i class="material-icons">delete</i></button>';
+                $html .= '</td>';
+                
+                break;
+            case "distribuidor":
+                $html = "";
+                break;
         }
         return ["html" => $html, "id" => $data["id"]];
+    }
+    public function limpiarCaracteresEspeciales($string ){
+        $string = htmlentities($string);
+        $string = preg_replace('/\&(.)[^;]*;/', '\\1', $string);
+        return $string;
     }
     public function adddataempresa(Request $request) {
         $datos = $request->all();
@@ -347,6 +461,7 @@ class PageController extends Controller
             $file = $request->file('icon');
             $extension = $file->getClientOriginalExtension();
             $fileName = time() . '.' . $extension;
+            
             $path = public_path('img/uploads/');
             $name = "{$url}/uploads/{$fileName}";
             $file->move($path, $fileName);
@@ -355,7 +470,9 @@ class PageController extends Controller
         if(isset($datos["image"])) {
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
-            $fileName = time() . '.' . $extension;
+            $fileName = time() . '.' . $extension;            
+            if($tipo == "producto")
+                $fileName = strtoupper($datos["codigo"]) . '-' . str_replace(" ","_",$datos["name"]) . '.' . $extension;
             $path = public_path('img/uploads/');
             $name = "{$url}/uploads/{$fileName}";
             $file->move($path, $fileName);
@@ -365,6 +482,12 @@ class PageController extends Controller
             unset($datos["is_particular_input"]);
         if(isset($datos["is_profesional_input"]))
             unset($datos["is_profesional_input"]);
+        
+        if($tipo == "pfamilia") {
+            $datos["url"] = self::limpiarCaracteresEspeciales($datos["title"]);
+            $datos["url"] = str_replace(" ","_",$datos["url"]);
+            $datos["url"] = strtolower($datos["url"]);
+        }
         switch($tipo) {
             case "sliderhome":
                 $datos["tipo"] = "home";
@@ -392,6 +515,57 @@ class PageController extends Controller
                     $html .= '</td>';
                 $html .= "</tr>";
                 break;
+            case "producto":
+                $cantidad = $datos["cantidadColor"];
+                $Arr_colores = [];
+                unset($datos["cantidadColor"]);
+                for($i = 1; $i <= $cantidad; $i++) {
+                    if(!isset($datos["title-{$i}"]))
+                        continue;
+                    $Arr_colores[] = [
+                        "name" => $datos["title-{$i}"],
+                        "code" => $datos["codigo-{$i}"],
+                        "order" => $datos["order-{$i}"],
+                        "descripcion" => $datos["descripcion-{$i}"],
+                        "image" => $datos["image-{$i}"],
+                        "image_text" => $datos["image_text-{$i}"],
+                        "file" => $request->file('image-{$i}')
+                    ];
+                    unset($datos["title-{$i}"]);
+                    unset($datos["codigo-{$i}"]);
+                    unset($datos["descripcion-{$i}"]);
+                    unset($datos["image-{$i}"]);
+                    unset($datos["image_text-{$i}"]);
+                    // print_r($Arr_colores);
+                }
+
+                $OBJ = Producto::create($datos);
+
+                for($i = 0; $i < count($Arr_colores); $i++) {
+                    $file = $Arr_colores[$i]["image"];
+                    $extension = $file->getClientOriginalExtension();
+                    $fileName = strtoupper($Arr_colores[$i]["code"]) . '-' . str_replace(" ","_",$Arr_colores[$i]["name"]) . '.' . $extension;
+                    $path = public_path('img/uploads/');
+                    $name = "{$url}/uploads/{$fileName}";
+                    $file->move($path, $fileName);
+                    $Arr_colores[$i]["image"] = "uploads/{$fileName}";
+                    $Arr_colores[$i]["producto_id"] = $OBJ["id"];
+                    Colorproducto::create($Arr_colores[$i]);
+                }
+
+                $familia = Pfamilia::find($datos["pfamilia_id"])["title"];
+                $html = "<tr data-id='{$OBJ["id"]}'>";
+                    $html .= "<td>{$datos["codigo"]}</td>";
+                    $html .= "<td><img style='width:50px' src='{$name}' /></td>";
+                    $html .= "<td>{$datos["name"]}</td>";
+                    $html .= "<td class='text-center'>{$familia}</td>";
+                    $html .= "<td>{$datos["order"]}</td>";
+                    $html .= '<td class="text-center">';
+                        $html .= '<button type="button" class="btn btn-primary" onclick="edit(\'producto\',' . $OBJ["id"] . ')"><i class="material-icons">create</i></button> ';
+                        $html .= '<button type="button" class="btn btn-danger" onclick="erase(\'producto\',' . $OBJ["id"] . ')"><i class="material-icons">delete</i></button>';
+                    $html .= '</td>';
+                $html .= "</tr>";
+                break;
             case "ventaja":
                 $OBJ = Ventaja::create($datos);
                 $html = "<tr data-id='{$OBJ["id"]}'>";
@@ -407,7 +581,7 @@ class PageController extends Controller
             case "pfamilia":
                 $OBJ = Pfamilia::create($datos);
                 $html = "<tr data-id='{$OBJ["id"]}'>";
-                    $html .= "<td>{<img style='width:50px' src='{$name}' />}</td>";
+                    $html .= "<td><img style='width:50px' src='{$name}' /></td>";
                     $html .= "<td>{$datos["title"]}</td>";
                     $html .= "<td class='text-center'>{$datos["order"]}</td>";
                     $html .= '<td class="text-center">';
@@ -433,7 +607,7 @@ class PageController extends Controller
                 $OBJ = Aplicacion::create($datos);
 
                 $html = "<tr data-id='{$OBJ["id"]}'>";
-                    $html .= "<td>{<a href='https://www.youtube.com/watch?v={$datos["video"]}' target='blank'>https://www.youtube.com/watch?v={$datos["video"]}</a>}</td>";
+                    $html .= "<td><a href='https://www.youtube.com/watch?v={$datos["video"]}' target='blank'>https://www.youtube.com/watch?v={$datos["video"]}</a></td>";
                     $html .= "<td>{$datos["title"]}</td>";
                     $html .= "<td class='text-center'>{$datos["order"]}</td>";
                     $html .= '<td class="text-center">';

@@ -15,15 +15,16 @@ class CreateProductoTable extends Migration
     {
         Schema::create('productos', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('image')->nullable();
-            $table->string('name')->nullable();
-            $table->string('order',3)->nullable();
-            $table->string('url')->nullable();
-            $table->string('descripcion')->nullable();
-            $table->string('ventaja')->nullable();
-            $table->string('color')->nullable();
-            $table->string('url_mercadolibre')->nullable();
-            $table->string('url_mercadopago')->nullable();
+            $table->string('codigo')->nullable()->default(NULL);
+            $table->string('image')->nullable()->default(NULL);
+            $table->string('name')->nullable()->default(NULL);
+            $table->string('order',3)->nullable()->default(NULL);
+            $table->string('url')->nullable()->default(NULL);
+            $table->string('descripcion')->nullable()->default(NULL);
+            $table->string('ventaja')->nullable()->default(NULL);
+            $table->string('color')->nullable()->default(NULL);
+            $table->string('url_mercadolibre')->nullable()->default(NULL);
+            $table->string('url_mercadopago')->nullable()->default(NULL);
             $table->boolean('is_particular')->default(false);
             $table->boolean('is_profesional')->default(false);
             $table->unsignedInteger('pfamilia_id');

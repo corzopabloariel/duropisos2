@@ -4,7 +4,10 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>@yield('headTitle', 'DuroPisos :: Administración')</title>
+        <title>@yield('headTitle', 'DuroPisos')</title>
+        <link rel="icon" type="image/png" href="{{ asset('img/logo/'. $favicon) }}"/>
+        
+
         <!-- <Fonts> -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -25,5 +28,46 @@
         <div id="wrapper">
             @yield('body')
         </div>
+
+        <!-- <Script> -->
+        <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        <script src="{{ asset('js/materialize.js') }}"></script>
+        <script src="{{ asset('js/messagebox.js') }}"></script>
+        <script src="{{ asset('js/lobibox.js') }}"></script>
+        <script src="{{ asset('js/var.js') }}"></script>
+        <!-- </Script> -->
+        <script>
+            M.AutoInit();
+            $(window).ready(function() {
+                $('.carousel.carousel-slider').carousel({
+                    fullWidth: true,
+                    indicators: true
+                });
+
+                $(".tipos a").on("click", function(e) {
+                    e.preventDefault();
+                    let tipo = parseInt($(this).data("tipo"));
+                    let target = $(".trabajos");
+
+                    $(this).closest(".tipos").find(".activo").removeClass("activo");
+                    $(this).addClass("activo");
+
+                    if(tipo == 0)
+                        target.find("> div").removeClass("d-none");
+                    else {
+                        target.find("> div").addClass("d-none");
+                        target.find(`> div[data-tipo='${tipo}']`).removeClass("d-none");
+                    }
+                });
+            });
+            var onloadCallback = function() {
+                grecaptcha.render('html_element', {
+                  'sitekey' : '6LeDa5YUAAAAACnCJJE6NC28LIZ6kqNY7kywhrmB'
+                });
+            };
+        </script>
     </body>
 </html>

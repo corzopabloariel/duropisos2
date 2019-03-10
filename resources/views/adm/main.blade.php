@@ -50,8 +50,8 @@
                         <div class="collapsible-body">
                             <ul>
                                 <li><a href="{{ route('producto', ['tipo' => 'familia']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Editar familias</a></li>
-                                <li><a href="{{ route('producto', ['tipo' => 'uno']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Editar productos</a></li>
-                                <li><a href="{{ route('page', ['seccion' => 'producto']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Editar contenido</a></li>
+                                <li><a href="{{ route('producto', ['tipo' => 'uno']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Todos los productos</a></li>
+                                <!-- <li><a href="{{ route('page', ['seccion' => 'producto']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Editar contenido</a></li> -->
                             </ul>
                         </div>
                     </li>
@@ -59,8 +59,8 @@
                         <div class="collapsible-header"><i class="material-icons">style</i>Aplicación</div>
                         <div class="collapsible-body">
                             <ul>
-                                <li><a href="{{ route('add', ['seccion' => 'aplicacion']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Agregar aplicación</a></li>
-                                <li><a href="{{ route('page', ['seccion' => 'aplicacion']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Editar contenido</a></li>
+                                <li><a href="{{ route('add', ['seccion' => 'aplicacion']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Todas las aplicaciones</a></li>
+                                <!-- <li><a href="{{ route('page', ['seccion' => 'aplicacion']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Editar contenido</a></li> -->
                             </ul>
                         </div>
                     </li>
@@ -68,8 +68,8 @@
                         <div class="collapsible-header"><i class="material-icons">grid_on</i>Trabajos realizados</div>
                         <div class="collapsible-body">
                             <ul>
-                                <li><a href="{{ route('add', ['seccion' => 'trabajo']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Agregar trabajo</a></li>
-                                <li><a href="{{ route('page', ['seccion' => 'trabajo']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Editar contenido</a></li>
+                                <li><a href="{{ route('add', ['seccion' => 'trabajo']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Todos los trabajos</a></li>
+                                <!-- <li><a href="{{ route('page', ['seccion' => 'trabajo']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Editar contenido</a></li> -->
                             </ul>
                         </div>
                     </li>
@@ -77,8 +77,8 @@
                         <div class="collapsible-header"><i class="material-icons">help</i>Preguntas frecuentes</div>
                         <div class="collapsible-body">
                             <ul>
-                                <li><a href="{{ route('add', ['seccion' => 'pregunta']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Agregar pregunta</a></li>
-                                <li><a href="{{ route('page', ['seccion' => 'pregunta']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Editar contenido</a></li>
+                                <li><a href="{{ route('add', ['seccion' => 'pregunta']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Todas las preguntas</a></li>
+                                <!-- <li><a href="{{ route('page', ['seccion' => 'pregunta']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Editar contenido</a></li> -->
                             </ul>
                         </div>
                     </li>
@@ -86,7 +86,7 @@
                         <div class="collapsible-header"><i class="material-icons">local_library</i>Distribuidores</div>
                         <div class="collapsible-body">
                             <ul>
-                                <li><a href="{{ route('page', ['seccion' => 'distribuidor']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Agregar distribuidor</a></li>
+                                <li><a href="{{ route('page', ['seccion' => 'distribuidor']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Todos los distribuidores</a></li>
                             </ul>
                         </div>
                     </li>
@@ -94,8 +94,8 @@
                         <div class="collapsible-header"><i class="material-icons">insert_emoticon</i>Ventajas</div>
                         <div class="collapsible-body">
                             <ul>
-                                <li><a href="{{ route('add', ['seccion' => 'ventaja']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Agregar ventaja</a></li>
-                                <li><a href="{{ route('page', ['seccion' => 'ventaja']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Editar contenido</a></li>
+                                <li><a href="{{ route('add', ['seccion' => 'ventaja']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Todas las ventajas</a></li>
+                                <!-- <li><a href="{{ route('page', ['seccion' => 'ventaja']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Editar contenido</a></li> -->
                             </ul>
                         </div>
                     </li>
@@ -103,7 +103,7 @@
                         <div class="collapsible-header"><i class="material-icons">work</i>Datos de la empresa</div>
                         <div class="collapsible-body">
                             <ul>{{-- --}}
-                                <li><a href="{{ route('empresa') }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Editar datos</a></li>
+                                <li><a href="{{ route('admempresa') }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Editar datos</a></li>
                             </ul>
                         </div>
                     </li>
@@ -213,27 +213,73 @@
             M.AutoInit();
             
             $("#modal1").modal({
+                onCloseEnd: function(modal, trigger) {
+                    if(window.cantidadColor !== undefined)
+                        delete window.cantidadColor;
+                },
                 onOpenEnd: function(modal, trigger) {
                     $("#modal1").removeAttr("tabindex");
                     if($("#modal1").find("#texto").length) {
                         CKEDITOR.replace('texto');
 	                    CKEDITOR.config.width = '100%';
                     }
+                    if($("#modal1").find("#descripcion").length) {
+                        CKEDITOR.replace('descripcion');
+	                    CKEDITOR.config.width = '100%';
+                    }
+                    if($("#modal1").find("#ventaja").length) {
+                        CKEDITOR.replace('ventaja');
+	                    CKEDITOR.config.width = '100%';
+                    }
+                    if($("#modal1").find("#color").length) {
+                        CKEDITOR.replace('color');
+	                    CKEDITOR.config.width = '100%';
+                    }
+                    if($("#modal1").find("#presentacion").length) {
+                        CKEDITOR.replace('presentacion');
+	                    CKEDITOR.config.width = '100%';
+                    }
 
                     if(window.provincias !== undefined) {
-                        $("#provincia_id").select2({
-                            data: window.provincias,
-                            width: 'resolve',
-                            placeholder: 'Seleccione Provincia',
-                            allowClear: true
+                        promise = new Promise(function (resolve, reject) {
+                            $("#provincia_id").select2({
+                                data: window.provincias,
+                                width: 'resolve',
+                                placeholder: 'Seleccione Provincia',
+                                allowClear: true
+                            });
+                            $("#localidad_id").select2({
+                                width: 'resolve',
+                                placeholder: 'Seleccione Provincia',
+                            });
+                            resolve();
                         });
-                        $("#localidad_id").select2({
-                            width: 'resolve',
-                            placeholder: 'Seleccione Provincia',
-                        });
+
+                        promiseFunction = () => {
+                            promise
+                            .then(function() {
+                                if(window.ubicacion_select !== undefined)
+                                    $("#provincia_id").val(window.ubicacion_select.provincia_id).trigger("change");
+                            })
+                        }
+                        promiseFunction();
                     } else {
                         if($(".modal select").length) 
                             $(".modal select").formSelect();
+                    }
+
+                    if(window.ARR_colores.length > 0) {
+                        let t = $("#colores");
+                        for(var x in window.ARR_colores) {
+                            addColor(true);
+                            t.find("> .row:last-child()").find(`[name="id-${parseInt(x) + 1}"]`).val(window.ARR_colores[x]["id"]);
+                            t.find("> .row:last-child()").find(`[name="title-${parseInt(x) + 1}"]`).val((window.ARR_colores[x]["name"] === null ? "" : window.ARR_colores[x]["name"]));
+                            t.find("> .row:last-child()").find(`[name="codigo-${parseInt(x) + 1}"]`).val((window.ARR_colores[x]["code"] === null ? "" : window.ARR_colores[x]["code"]));
+                            t.find("> .row:last-child()").find(`[name="order-${parseInt(x) + 1}"]`).val((window.ARR_colores[x]["order"] === null ? "" : window.ARR_colores[x]["order"]));
+                            t.find("> .row:last-child()").find(`[name="image_text-${parseInt(x) + 1}"]`).val(window.ARR_colores[x]["image"]);
+                            t.find("> .row:last-child()").find(`[name="descripcion-${parseInt(x) + 1}"]`).val((window.ARR_colores[x]["descripcion"] === null ? "" : window.ARR_colores[x]["descripcion"]));
+                        }
+                        delete window.ARR_colores;
                     }
                 }
             });
@@ -241,109 +287,176 @@
             editEmpresa = function(t) {
                 let modal = $("#modal1");
                 let html = footer = "";
+                let url = "{{ url('/adm/data/') }}";
                 let url_add = "{{ url('/adm/adddataempresa/') }}";
+                url += `/${t}/nada`;
                 modal.find("form").attr("action",url_add);
-                switch(t) {
-                    case 'data':
-                        html += `<input name="tipo" type="hidden" value="${t}">`;
-                        html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
-                        html += '<div class="container add">';
-                            html += '<div class="row">';
-                                html += '<div class=" col s12">';
-                                    html += '<label for="direccion">Domicilio</label>';
-                                    html += `<input placeholder="Domicilio" id="direccion" name="direccion" type="text" required="true" class="validate">`;
+                $.ajax({
+                    url: url,
+                    method: 'get',
+                    dataType: 'json',
+                    asy: false,
+                    success: function(result){
+                        switch(t) {
+                            case 'data':
+                                window.ubicacion_select = {"provincia_id":result.provincia_id,"localidad_id":result.localidad_id};
+                                html += `<input name="tipo" type="hidden" value="${t}">`;
+                                html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
+                                html += '<div class="container add">';
+                                    html += '<div class="row">';
+                                        html += '<div class=" col s12">';
+                                            html += '<label for="direccion">Domicilio</label>';
+                                            html += `<input value="${result.direccion}" placeholder="Domicilio" id="direccion" name="direccion" type="text" required="true" class="validate">`;
+                                        html += '</div>';
+                                    html += '</div>';
+                                    html += '<div class="row">';
+                                        html += '<div class=" col s6">';
+                                            html += '<label for="provincia_id">Provincia</label>';
+                                            html += `<select onchange="buscarLocalidad(this)" id="provincia_id" name="provincia_id"></select>`;
+                                        html += '</div>';
+                                        html += '<div class=" col s6">';
+                                            html += '<label for="localidad_id">Provincia</label>';
+                                            html += `<select id="localidad_id" name="localidad_id"></select>`;
+                                        html += '</div>';
+                                    html += '</div>';
+                                    html += '<div class="row">';
+                                        html += '<div class="file-field input-field col s12">';
+                                            html += '<div class="btn">';
+                                                html += '<span>Logotipo</span>';
+                                                html += '<input type="file" id="logotipo" name="logotipo">';
+                                            html += '</div>';
+                                            html += '<div class="file-path-wrapper">';
+                                                html += `<input value="${result.logo_principal}" class="file-path" id="logotipo_text" name="logotipo_text" type="text">`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                    html += '</div>';
+                                    html += '<div class="row">';
+                                        html += '<div class="file-field input-field col s12">';
+                                            html += '<div class="btn">';
+                                                html += '<span>Logotipo footer</span>';
+                                                html += '<input type="file" id="logotipoFooter" name="logotipoFooter">';
+                                            html += '</div>';
+                                            html += '<div class="file-path-wrapper">';
+                                                html += `<input value="${(result.logo_footer === null ? "" : result.logo_footer)}" class="file-path" id="logotipoFooter_text" name="logotipoFooter_text" type="text">`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                    html += '</div>';
+                                    html += '<div class="row">';
+                                        html += '<div class="file-field input-field col s12">';
+                                            html += '<div class="btn">';
+                                                html += '<span>Favicon</span>';
+                                                html += '<input type="file" id="favicon" name="favicon">';
+                                            html += '</div>';
+                                            html += '<div class="file-path-wrapper">';
+                                                html += `<input value="${(result.favicon === null ? "" : result.favicon)}" class="file-path" id="favicon_text" name="favicon_text" type="text">`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                    html += '</div>';
                                 html += '</div>';
+                                footer += '<button type="submit" class="btn btn-success">Cambiar</button>';
+                            break;
+                            case "contacto":
+                                html += `<input name="tipo" type="hidden" value="${t}">`;
+                                html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
+                                html += '<div class="container add">';
+                                    html += '<div class="row">';
+                                        html += '<div class=" col s12">';
+                                            html += '<label for="email_1">Email 1</label>';
+                                            html += `<input value="${result.email_1}" placeholder="Email 1" id="email_1" name="email_1" type="email" required="true" class="validate">`;
+                                        html += '</div>';
+                                    html += '</div>';
+                                    html += '<div class="row">';
+                                        html += '<div class=" col s12">';
+                                            html += '<label for="email_2">Email 2</label>';
+                                            html += `<input value="${result.email_2}" placeholder="Email 2" id="email_2" name="email_2" type="email" class="validate">`;
+                                        html += '</div>';
+                                    html += '</div>';
+                                    html += '<div class="row">';
+                                        html += '<div class=" col s12">';
+                                            html += '<label for="telefono_1">Teléfono</label>';
+                                            html += `<input value="${result.telefono_1}" placeholder="Teléfono" id="telefono_1" name="telefono_1" type="text" required="true" class="validate">`;
+                                        html += '</div>';
+                                    html += '</div>';
+
+                                    html += '<div class="row">';
+                                        html += '<div class=" col s6">';
+                                            html += '<label for="facebook">Facebook</label>';
+                                            html += `<input value="${(result.facebook === null ? "" : result.facebook)}" placeholder="Facebook" id="facebook" name="facebook" type="text" class="validate">`;
+                                            html += '<span class="helper-text">Enlace completo</span>';
+                                        html += '</div>';
+                                        html += '<div class=" col s6">';
+                                            html += '<label for="instagram">Instagram</label>';
+                                            html += `<input value="${(result.instagram === null ? "" : result.instagram)}" placeholder="Instagram" id="instagram" name="instagram" type="text" class="validate">`;
+                                            html += '<span class="helper-text">Enlace completo</span>';
+                                        html += '</div>';
+                                    html += '</div>';
+                                html += '</div>';
+
+                                footer += '<button type="submit" class="btn btn-success">Cambiar</button>';
+                            break;
+                        }
+
+                        modal.find(".modal-content").html(html);
+                        modal.find(".modal-footer").html(footer);
+                        modal.modal("open");
+                    }
+                });
+            }
+            removeColor = function(t) {
+                $(t).closest(".row").remove();
+            }
+            addColor = function(conID = false) {
+                if(window.cantidadColor === undefined) window.cantidadColor = 0;
+                window.cantidadColor ++;
+                let t = $("#colores");
+                let html = "";
+
+                html += '<div class="row">';
+                    if(conID)
+                        html += `<input name="id-${window.cantidadColor}" type="hidden">`;
+                    html += '<div class="col s6">';
+                        html += '<div class="row m-0">';
+                            html += '<div class="col s12">';
+                                html += `<label for="title-${window.cantidadColor}">Título</label>`;
+                                html += `<input placeholder="Título" id="title-${window.cantidadColor}" name="title-${window.cantidadColor}" type="text" required="true" class="validate">`;
                             html += '</div>';
-                            html += '<div class="row">';
-                                html += '<div class=" col s6">';
-                                    html += '<label for="provincia_id">Provincia</label>';
-                                    html += `<select onchange="buscarLocalidad(this)" id="provincia_id" name="provincia_id"></select>`;
-                                html += '</div>';
-                                html += '<div class=" col s6">';
-                                    html += '<label for="localidad_id">Provincia</label>';
-                                    html += `<select id="localidad_id" name="localidad_id"></select>`;
-                                html += '</div>';
+                        html += '</div>';
+                        html += '<div class="row m-0">';
+                            html += '<div class="col s6">';
+                                html += `<label for="codigo-${window.cantidadColor}">Código</label>`;
+                                html += `<input placeholder="Código" id="codigo-${window.cantidadColor}" name="codigo-${window.cantidadColor}" type="text" class="validate">`;
                             html += '</div>';
-                            html += '<div class="row">';
-                                html += '<div class="file-field input-field col s12">';
-                                    html += '<div class="btn">';
-                                        html += '<span>Logotipo</span>';
-                                        html += '<input type="file" id="logotipo" name="logotipo">';
-                                    html += '</div>';
-                                    html += '<div class="file-path-wrapper">';
-                                        html += `<input class="file-path" id="logotipo_text" name="logotipo_text" type="text">`;
-                                    html += '</div>';
-                                html += '</div>';
+                            html += '<div class="col s6">';
+                                html += `<label for="order-${window.cantidadColor}">Orden</label>`;
+                                html += `<input placeholder="Orden" id="order-${window.cantidadColor}" name="order-${window.cantidadColor}" type="text" class="validate">`;
                             html += '</div>';
-                            html += '<div class="row">';
-                                html += '<div class="file-field input-field col s12">';
-                                    html += '<div class="btn">';
-                                        html += '<span>Logotipo footer</span>';
-                                        html += '<input type="file" id="logotipoFooter" name="logotipoFooter">';
-                                    html += '</div>';
-                                    html += '<div class="file-path-wrapper">';
-                                        html += `<input class="file-path" id="logotipoFooter_text" name="logotipoFooter_text" type="text">`;
-                                    html += '</div>';
+                        html += '</div>';
+                    html += '</div>';
+                    
+                    html += '<div class="col s6 position-relative" style="position:relative">';
+                        html += '<div class="row m-0">';
+                            html += '<div class="file-field input-field col s12">';
+                                html += '<div class="btn">';
+                                    html += '<span>Imagen</span>';
+                                    html += `<input type="file" id="image-${window.cantidadColor}" name="image-${window.cantidadColor}">`;
                                 html += '</div>';
-                            html += '</div>';
-                            html += '<div class="row">';
-                                html += '<div class="file-field input-field col s12">';
-                                    html += '<div class="btn">';
-                                        html += '<span>Favicon</span>';
-                                        html += '<input type="file" id="favicon" name="favicon">';
-                                    html += '</div>';
-                                    html += '<div class="file-path-wrapper">';
-                                        html += `<input class="file-path" id="favicon_text" name="favicon_text" type="text">`;
-                                    html += '</div>';
+                                html += '<div class="file-path-wrapper">';
+                                    html += `<input class="file-path" required="true" id="image_text-${window.cantidadColor}" name="image_text-${window.cantidadColor}" type="text">`;
+                                    // html += '<span class="helper-text">Tamaño recomendado 92x92</span>';
                                 html += '</div>';
                             html += '</div>';
                         html += '</div>';
-                        footer += '<button type="submit" class="btn btn-success">Cambiar</button>';
-                    break;
-                    case "contacto":
-                        html += `<input name="tipo" type="hidden" value="${t}">`;
-                        html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
-                        html += '<div class="container add">';
-                            html += '<div class="row">';
-                                html += '<div class=" col s12">';
-                                    html += '<label for="email_1">Email 1</label>';
-                                    html += `<input placeholder="Email 1" id="email_1" name="email_1" type="email" required="true" class="validate">`;
-                                html += '</div>';
-                            html += '</div>';
-                            html += '<div class="row">';
-                                html += '<div class=" col s12">';
-                                    html += '<label for="email_2">Email 2</label>';
-                                    html += `<input placeholder="Email 2" id="email_2" name="email_2" type="email" class="validate">`;
-                                html += '</div>';
-                            html += '</div>';
-                            html += '<div class="row">';
-                                html += '<div class=" col s12">';
-                                    html += '<label for="telefono_1">Teléfono</label>';
-                                    html += `<input placeholder="Teléfono" id="telefono_1" name="telefono_1" type="text" required="true" class="validate">`;
-                                html += '</div>';
-                            html += '</div>';
-
-                            html += '<div class="row">';
-                                html += '<div class=" col s6">';
-                                    html += '<label for="facebook">Facebook</label>';
-                                    html += `<input placeholder="Facebook" id="facebook" name="facebook" type="text" class="validate">`;
-                                    html += '<span class="helper-text">Enlace completo</span>';
-                                html += '</div>';
-                                html += '<div class=" col s6">';
-                                    html += '<label for="instagram">Instagram</label>';
-                                    html += `<input placeholder="Instagram" id="instagram" name="instagram" type="text" class="validate">`;
-                                    html += '<span class="helper-text">Enlace completo</span>';
-                                html += '</div>';
+                        html += '<div class="row m-0">';
+                            html += '<div class="col s12">';
+                                html += '<span>Descripción</span>';
+                                html += `<textarea placeholder="Descripción" id="descripcion-${window.cantidadColor}" name="descripcion-${window.cantidadColor}" class="validate materialize-textarea"></textarea>`;
                             html += '</div>';
                         html += '</div>';
+                        html += '<button style="top:0; right:0" onclick="removeColor(this)" class="btn btn-danger position-absolute"><i class="large material-icons">delete_sweep</i></button>';
+                    html += '</div>';
+                html += '</div>';
 
-                        footer += '<button type="submit" class="btn btn-success">Cambiar</button>';
-                    break;
-                }
-                
-                modal.find(".modal-content").html(html);
-                modal.find(".modal-footer").html(footer);
-                modal.modal("open");
+                t.append(html);
             }
             addRegistro = function(t) {
                 let modal = $("#modal1");
@@ -356,7 +469,7 @@
                         html += '<h4>Agregar slider</h4>';
                         html += `<input name="tipo" type="hidden" value="${t}">`;
                         html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
-                        html += '<div class="container add">';
+                        html += '<div class="add">';
                             html += '<div class="row">';
                                 html += '<div class=" col s12">';
                                     html += '<label for="texto">Texto</label>';
@@ -389,7 +502,7 @@
                         html += '<h4>Agregar ventaja</h4>';
                         html += `<input name="tipo" type="hidden" value="${t}">`;
                         html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
-                        html += '<div class="container add">';
+                        html += '<div class="add">';
                             html += '<div class="row">';
                                 html += '<div class=" col s6">';
                                     html += '<label for="first_name">Título</label>';
@@ -415,15 +528,120 @@
                         html += '</div>';
                         footer += '<button type="submit" class="btn btn-success">Agregar</button>';
                     break;
+                    case 'producto':
+                        modal.find("form").attr("action",url_add);
+                        html += '<h4>Agregar producto</h4>';
+                        html += `<input name="tipo" type="hidden" value="${t}">`;
+                        html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
+                        html += '<div class="add">';
+                            html += '<div class="row">';
+                                html += '<div class=" col s12">';
+                                    html += '<label for="name">Nombre</label>';
+                                    html += `<input placeholder="Nombre" id="name" name="name" type="text" class="validate">`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class=" col s6">';
+                                    html += '<label for="codigo">Código</label>';
+                                    html += `<input placeholder="Código" id="codigo" name="codigo" type="text" class="validate">`;
+                                html += '</div>';
+                                html += '<div class=" col s6">';
+                                    html += '<label for="order">Orden</label>';
+                                    html += `<input maxlength="3" placeholder="Orden" id="order" name="order" type="text" class="validate">`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class="input-field col s12">';
+                                    html += '<select name="pfamilia_id" required="true">';
+                                        html += '<option value="" disabled selected>Seleccione</option>';
+                                        for(var i in window.familias)
+                                            html += `<option value="${i}">${window.familias[i]}</option>`;
+                                    html += '</select>';
+                                    html += '<label>Familia de producto</label>';
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class=" col s12">';
+                                    html += '<label for="url_mercadolibre">Link MercadoLibre</label>';
+                                    html += `<input placeholder="Link MercadoLibre" id="url_mercadolibre" name="url_mercadolibre" type="text" class="validate">`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class=" col s12">';
+                                    html += '<label for="url_mercadopago">Link MercadoPago</label>';
+                                    html += `<input placeholder="Link MercadoPago" id="url_mercadopago" name="url_mercadopago" type="text" class="validate">`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class="file-field input-field col s12">';
+                                    html += '<div class="btn">';
+                                        html += '<span>Imagen</span>';
+                                        html += '<input type="file" id="image" name="image">';
+                                    html += '</div>';
+                                    html += '<div class="file-path-wrapper">';
+                                        html += `<input class="file-path" required="true" id="image_text" name="image_text" type="text">`;
+                                        html += '<span class="helper-text">Tamaño recomendado 1100x380</span>';
+                                    html += '</div>';
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class=" col s12">';
+                                    html += '<label for="descripcion">Descripción</label>';
+                                    html += `<textarea id="descripcion" name="descripcion"></textarea>`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class=" col s12">';
+                                    html += '<label for="ventaja">Ventaja</label>';
+                                    html += `<textarea id="ventaja" name="ventaja"></textarea>`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class=" col s12">';
+                                    html += '<label for="presentacion">Presentación</label>';
+                                    html += `<textarea id="presentacion" name="presentacion"></textarea>`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class=" col s12">';
+                                    html += '<label for="color">Color</label>';
+                                    html += `<textarea id="color" name="color"></textarea>`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<hr/>';
+                            html += '<div class="row">';
+                                html += '<div class=" col s12">';
+                                    html += '<button type="button" class="btn" onclick="addColor()">Agregar color</button>';    
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div id="colores"></div>';
+                            html += '<div class="row">';
+                                html += '<div class=" col s12">';
+                                    html += '<p class="m-0">';
+                                        html += '<label>';
+                                            html += '<input type="checkbox" name="is_profesional" />';
+                                            html += '<span>Profesional</span>';
+                                        html += '</label>';
+                                    html += '</p>';
+                                    html += '<p class="m-0">';
+                                        html += '<label>';
+                                            html += '<input type="checkbox" name="is_particular" />';
+                                            html += '<span>Particular</span>';
+                                        html += '</label>';
+                                    html += '</p>';
+                                html += '</div>';
+                        html += '</div>';
+                        footer += '<button type="submit" class="btn btn-success">Agregar</button>';
+                    break;
                     case 'pregunta':
                         modal.find("form").attr("action",url_add);
                         html += '<h4>Agregar pregunta</h4>';
                         html += `<input name="tipo" type="hidden" value="${t}">`;
-                        html += '<div class="container add">';
+                        html += '<div class="add">';
                             html += '<div class="row">';
                                 html += '<div class=" col s12">';
                                     html += '<label for="pregunta">Pregunta</label>';
-                                    html += `<input placeholder="Pregunta" id="pregunta" name="pregunta" type="text" required="true" class="validate">`;
+                                    html += `<input maxlength="191" placeholder="Pregunta" id="pregunta" name="pregunta" type="text" required="true" class="validate">`;
                                 html += '</div>';
                             html += '</div>';
                             html += '<div class="row">';
@@ -445,7 +663,7 @@
                         modal.find("form").attr("action",url_add);
                         html += '<h4>Agregar aplicación</h4>';
                         html += `<input name="tipo" type="hidden" value="${t}">`;
-                        html += '<div class="container add">';
+                        html += '<div class="add">';
                             html += '<div class="row">';
                                 html += '<div class=" col s12">';
                                     html += '<label for="title">Título</label>';
@@ -504,7 +722,7 @@
                         html += '<h4>Agregar trabajo</h4>';
                         html += `<input name="tipo" type="hidden" value="${t}">`;
                         html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
-                        html += '<div class="container add">';
+                        html += '<div class="add">';
                             html += '<div class="row">';
                                 html += '<div class=" col s6">';
                                     html += '<label for="title">Título</label>';
@@ -547,7 +765,7 @@
                                     html += '</div>';
                                     html += '<div class="file-path-wrapper">';
                                         html += `<input class="file-path" required="true" id="image_text" name="image_text" type="text">`;
-                                        html += '<span class="helper-text">Tamaño recomendado 400x400</span>';
+                                        html += '<span class="helper-text">Tamaño recomendado 360x210</span>';
                                     html += '</div>';
                                 html += '</div>';
                             html += '</div>';
@@ -559,7 +777,7 @@
                         html += '<h4>Agregar servicio integral</h4>';
                         html += `<input name="tipo" type="hidden" value="${t}">`;
                         html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
-                        html += '<div class="container add">';
+                        html += '<div class="add">';
                             html += '<div class="row">';
                                 html += '<div class=" col s6">';
                                     html += '<label for="title">Nombre</label>';
@@ -589,7 +807,7 @@
                         modal.find("form").attr("action",url_add);
                         html += '<h4>Agregar distribuidor</h4>';
                         html += `<input name="tipo" type="hidden" value="${t}">`;
-                        html += '<div class="container add">';
+                        html += '<div class="add">';
                             html += '<div class="row">';
                                 html += '<div class=" col s12">';
                                     html += '<label for="local">Local</label>';
@@ -643,9 +861,35 @@
                         if(result !== null) {
                             let html = footer = "";
                             switch(t) {
+                                case 'pregunta':
+                                    html += '<h4>Editar pregunta</h4>';
+                                    html += `<input type="hidden" value="${result.id}" id="frm_id" name="frm_id" />`;
+                                    html += `<input name="tipo" type="hidden" value="${t}">`;
+                                    html += '<div class="container">';
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s12">';
+                                                html += '<label for="pregunta">Pregunta</label>';
+                                                html += `<input maxlength="191" placeholder="Pregunta" id="pregunta" name="pregunta" type="text" required="true" class="validate" value="${result.pregunta}">`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s12">';
+                                                html += '<label for="respuesta">Respuesta</label>';
+                                                html += `<textarea placeholder="Respuesta" id="respuesta" name="respuesta" required="true" class="validate materialize-textarea">${result.respuesta}</textarea>`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s6">';
+                                                html += '<label for="order">Orden</label>';
+                                                html += `<input maxlength="3" placeholder="Orden" id="order" name="order" type="text" required="true" class="validate" value="${result.order}">`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                    html += '</div>';
+                                    footer += '<button type="submit" class="btn btn-success">Editar</button>';
+                                    break;
                                 case 'servicio':
                                     html += '<h4>Editar servicio</h4>';
-                                    html += '<div class="container">';
+                                    html += '<div class="">';
                                         html += `<input type="hidden" value="${result.id}" id="frm_id" name="frm_id" />`;
                                         html += `<input name="tipo" type="hidden" value="${t}">`;
                                         html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
@@ -678,6 +922,44 @@
                                     html += '</div>';
                                     footer += '<button type="submit" class="btn btn-success">Editar</button>';
                                 break;
+                                case "distribuidor":
+                                    html = '<h4>Editar distribuidor</h4>';
+                                    html += `<input type="hidden" value="${result.id}" id="frm_id" name="frm_id" />`;
+                                    html += `<input name="tipo" type="hidden" value="${t}">`;
+                                    html += '<div class="container">';
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s12">';
+                                                html += '<label for="local">Local</label>';
+                                                html += `<input placeholder="Local" id="local" value="${result.local}" name="local" type="text" required="true" class="validate">`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s12">';
+                                                html += '<label for="direccion">Dirección</label>';
+                                                html += `<input placeholder="Dirección" id="direccion" value="${result.direccion}" name="direccion" type="text" required="true" class="validate">`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s6">';
+                                                html += '<label for="telefono">Teléfono</label>';
+                                                html += `<input placeholder="Teléfono" id="telefono" name="telefono" value="${(result.telefono === null ? "" : result.telefono)}" type="text" required="true" class="validate">`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s6">';
+                                                html += '<label for="provincia_id">Provincia</label>';
+                                                html += `<select onchange="buscarLocalidad(this)" id="provincia_id" name="provincia_id" required="true" style="width:100%"><select>`;
+                                            html += '</div>';
+                                            html += '<div class=" col s6">';
+                                                html += '<label for="localidad_id">Localidad</label>';
+                                                html += `<select id="localidad_id" name="localidad_id" required="true" style="width:100%"><select>`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                    html += '</div>';
+                                    footer += '<button type="submit" class="btn btn-success">Editar</button>';
+
+                                    window.ubicacion_select = {"provincia_id":result.provincia_id,"localidad_id":result.localidad_id};
+                                break;
                                 case 'slider':
                                     html += '<h4>Editar slider</h4>';
                                     html += `<input type="hidden" value="${result.id}" id="frm_id" name="frm_id" />`;
@@ -687,7 +969,7 @@
                                         html += '<div class="row">';
                                             html += '<div class=" col s12">';
                                                 html += '<label for="texto">Texto</label>';
-                                                html += `<textarea id="texto" name="texto" required="true">${result.texto}</textarea>`;
+                                                html += `<textarea id="texto" name="texto" required="true">${(result.texto === null ? "" : result.texto)}</textarea>`;
                                             html += '</div>';
                                         html += '</div>';
                                         html += '<div class="row">';
@@ -714,6 +996,129 @@
                                                 html += `<img style="width:96px; margin:0 auto;" onError="this.src='{{ asset('img/general/no-img.png') }}'" src="{{ asset('img/') }}/${result.image}" alt="Ícono ${result.id}" />`;
                                             html += '</div>';
                                         html += '</div>';
+                                    html += '</div>';
+                                    footer += '<button type="submit" class="btn btn-success">Editar</button>';
+                                break;
+                                case 'producto':
+                                    window.ARR_colores = result.colores;
+                                    html += '<h4>Editar producto</h4>';
+                                    html += `<input type="hidden" value="${result.id}" id="frm_id" name="frm_id" />`;
+                                    html += `<input name="tipo" type="hidden" value="${t}">`;
+                                    html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
+                                    html += '<div class="">';
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s12">';
+                                                html += '<label for="name">Nombre</label>';
+                                                html += `<input placeholder="Nombre" id="name" name="name" type="text" required="true" class="validate" value="${(result.name === null ? "" : result.name)}">`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s6">';
+                                                html += '<label for="codigo">Código</label>';
+                                                html += `<input placeholder="Código" id="codigo" name="codigo" type="text" class="validate" value="${(result.codigo === null ? "" : result.codigo)}">`;
+                                            html += '</div>';
+                                            html += '<div class=" col s6">';
+                                                html += '<label for="order">Orden</label>';
+                                                html += `<input maxlength="3" placeholder="Orden" id="order" name="order" type="text" required="true" class="validate" value="${result.order}">`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="row">';
+                                            html += '<div class="input-field col s12">';
+                                                html += '<select name="pfamilia_id" required="true">';
+                                                    html += '<option value="" disabled selected>Seleccione</option>';
+                                                    for(var i in window.familias) {
+                                                        if(parseInt(result.pfamilia_id) == parseInt(i))
+                                                            html += `<option value="${i}" selected>${window.familias[i]}</option>`;
+                                                        else
+                                                            html += `<option value="${i}">${window.familias[i]}</option>`;
+                                                    }
+                                                html += '</select>';
+                                                html += '<label>Familia de producto</label>';
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s12">';
+                                                html += '<label for="url_mercadolibre">Link MercadoLibre</label>';
+                                                html += `<input placeholder="Link MercadoLibre" id="url_mercadolibre" name="url_mercadolibre" type="text" class="validate" value="${(result.url_mercadolibre === null ? "" : result.url_mercadolibre)}">`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s12">';
+                                                html += '<label for="url_mercadopago">Link MercadoPago</label>';
+                                                html += `<input placeholder="Link MercadoPago" id="url_mercadopago" name="url_mercadopago" type="text" class="validate" value="${(result.url_mercadopago === null ? "" : result.url_mercadopago)}">`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="row">';
+                                            html += '<div class="file-field input-field col s12">';
+                                                html += '<div class="btn">';
+                                                    html += '<span>Imagen</span>';
+                                                    html += '<input type="file" id="image" name="image">';
+                                                html += '</div>';
+                                                html += '<div class="file-path-wrapper">';
+                                                    html += `<input class="file-path" required="true" id="image_text" name="image_text" type="text" value="${result.image}">`;
+                                                    html += '<span class="helper-text">Tamaño recomendado 1100x380</span>';
+                                                html += '</div>';
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="row">';
+                                            html += '<div class="col s12">';
+                                                html += `<img style="width:100%; margin:0 auto;" onError="this.src='{{ asset('img/general/no-img.png') }}'" src="{{ asset('img/') }}/${result.image}" alt="Imagen ${result.id}" />`;
+                                            html += '</div>';
+                                        html += '</div>';
+
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s12">';
+                                                html += '<label for="descripcion">Descripción</label>';
+                                                html += `<textarea id="descripcion" name="descripcion">${(result.descripcion === null ? "" : result.descripcion)}</textarea>`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s12">';
+                                                html += '<label for="ventaja">Ventaja</label>';
+                                                html += `<textarea id="ventaja" name="ventaja">${(result.ventaja === null ? "" : result.ventaja)}</textarea>`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s12">';
+                                                html += '<label for="presentacion">Presentación</label>';
+                                                html += `<textarea id="presentacion" name="presentacion">${(result.presentacion === null ? "" : result.presentacion)}</textarea>`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s12">';
+                                                html += '<label for="color">Color</label>';
+                                                html += `<textarea id="color" name="color">${(result.color === null ? "" : result.color)}</textarea>`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<hr/>';
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s12">';
+                                                html += '<button type="button" class="btn" onclick="addColor()">Agregar color</button>';    
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div id="colores"></div>';
+
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s12">';
+                                                html += '<p class="m-0">';
+                                                    html += '<label>';
+                                                        if(parseInt(result.is_profesional))
+                                                            html += '<input type="checkbox" name="is_profesional" checked />';
+                                                        else
+                                                            html += '<input type="checkbox" name="is_profesional" />';
+                                                        html += '<span>Profesional</span>';
+                                                    html += '</label>';
+                                                html += '</p>';
+                                                html += '<p class="m-0">';
+                                                    html += '<label>';
+                                                        if(parseInt(result.is_particular))
+                                                            html += '<input type="checkbox" name="is_particular" checked />';
+                                                        else
+                                                            html += '<input type="checkbox" name="is_particular" />';
+                                                        html += '<span>Particular</span>';
+                                                    html += '</label>';
+                                                html += '</p>';
+                                            html += '</div>';
                                     html += '</div>';
                                     footer += '<button type="submit" class="btn btn-success">Editar</button>';
                                 break;
@@ -877,7 +1282,7 @@
                                                 html += '</div>';
                                                 html += '<div class="file-path-wrapper">';
                                                     html += `<input class="file-path" required="true" value="${result.image}" id="image_text" name="image_text" type="text">`;
-                                                    html += '<span class="helper-text">Tamaño recomendado 400x400</span>';
+                                                    html += '<span class="helper-text">Tamaño recomendado 360x210</span>';
                                                 html += '</div>';
                                             html += '</div>';
                                         html += '</div>';
@@ -923,6 +1328,20 @@
                     if(tipo == "sliderhome" || tipo == "sliderempresa" || tipo == "slider") {
                         let value = CKEDITOR.instances['texto'].getData();
                         formData.set("texto",value);
+                    }
+                    if(tipo == "producto") {
+                        formData.set("is_particular", ($("[name='is_particular']").is(":checked") ? 1 : 0));
+                        formData.set("is_profesional", ($("[name='is_profesional']").is(":checked") ? 1 : 0));
+
+                        descripcion = CKEDITOR.instances['descripcion'].getData();
+                        ventaja = CKEDITOR.instances['ventaja'].getData();
+                        color = CKEDITOR.instances['color'].getData();
+
+                        formData.set("descripcion",descripcion);
+                        formData.set("ventaja",ventaja);
+                        formData.set("color",color);
+
+                        formData.append("cantidadColor",window.cantidadColor);
                     }
                     if($(t).find(".add").length) {
                         if(tipo == "data" || tipo == "contacto") {
@@ -974,11 +1393,15 @@
                                 notificacion("Espere. Al finalizar la tabla se actualizará");
                             },
                             success: function(data){
+                                console.log(data)
                                 $("#modal1").modal("close");
-                                if(data.id !== undefined) {
-                                    if($(`tr[data-id="${data.id}"]`).length)
-                                        $(`tr[data-id="${data.id}"]`).html(data.html)
-                                }
+                                if(tipo != "distribuidor") {
+                                    if(data.id !== undefined) {
+                                        if($(`tr[data-id="${data.id}"]`).length)
+                                            $(`tr[data-id="${data.id}"]`).html(data.html)
+                                    }
+                                } else
+                                    window.distribuidor.draw();
                             }
                         });
                     }
@@ -1005,6 +1428,7 @@
                                 $("table tbody").html('<tr class="vacio"><td colspan="4">SIN DATOS</td></tr>');
                                 break;
                             case "trabajo":
+                            case "producto":
                                 $("table tbody").html('<tr class="vacio"><td colspan="6">SIN DATOS</td></tr>');
                                 break;
                         }
@@ -1012,27 +1436,44 @@
                     $.ajax({
                         url: url,
                         method: 'get',
+                        success: function() {
+                            if(t == "distribuidor")
+                                window.distribuidor.draw();
+                        }
                     });
                 });
             }
             buscarLocalidad = function(t) {
                 provincia = $(t).val();
-                $.ajax({
-                    url: `{{ url('/adm/buscar/localidad') }}/${provincia}`,
-                    method: 'get',
-                    dataType: 'json',
-                    beforeSend: function() {
-                        notificacion("Espere ...");
-                    },
-                    success: function(data) {
+                let promise = new Promise(function (resolve, reject) {
+                    $.ajax({
+                        url: `{{ url('/adm/buscar/localidad') }}/${provincia}`,
+                        method: 'get',
+                        dataType: 'json',
+                        beforeSend: function() {
+                            notificacion("Espere ...");
+                        },
+                        success: function(data) {
+                            resolve(data);
+                        }
+                    });
+                })
+                promiseFunction = () => {
+                    promise
+                    .then(function(data) {
                         $("#localidad_id").select2({
                             data: data,
                             width: 'resolve',
                             placeholder: 'Seleccione Localidad',
                             allowClear: true
-                        })
-                    }
-                });
+                        });
+                        if(window.ubicacion_select !== undefined) {
+                            $("#localidad_id").val(window.ubicacion_select.localidad_id).trigger("change");
+                            delete window.ubicacion_select;
+                        }
+                    })
+                }
+                promiseFunction();
             }
         </script>
     </body>

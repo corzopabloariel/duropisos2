@@ -5,26 +5,26 @@
                 <img src="{{ asset('img') }}/{{ $logo }}"/>
             </div>
             <div class="col s6">
-                <ul class="right m-0">
-                    <li>{{$contacto["telefono_1"]}}</li>
-                    <li>{{$contacto["email_1"]}}</li>
-                    <li>{{$contacto["email_2"]}}</li>
+                <ul class="right ul-separado m-0">
+                    <li><i class="material-icons text_principal_444444">phone_in_talk</i><a class="text_principal_444444" href="tel:{{$contacto['telefono_1']}}">{{$contacto["telefono_1"]}}</a></li>
+                    <li><i class="material-icons">email</i><a class="text_principal_444444" href="mailto:{{$contacto['email_1']}}">{{$contacto["email_1"]}}</a><br/><a class="text_principal_444444" href="mailto:{{$contacto['email_2']}}">{{$contacto["email_2"]}}</a></li>
                 </ul>
             </div>
         </div>
     </div>
 </header>
+<!--  -->
 <nav class="nav">
     <div class="nav-wrapper">
         <ul id="nav-mobile" class="hide-on-med-and-down">
-            <li><a href="sass.html">Empresa</a></li>
-            <li><a href="badges.html">Productos</a></li>
-            <li><a href="collapsible.html">Aplicación</a></li>
-            <li><a href="collapsible.html">Trabajos Realizados</a></li>
-            <li><a href="collapsible.html">Preguntas Frecuentes</a></li>
-            <li><a href="collapsible.html">Distribuidores</a></li>
-            <li><a href="collapsible.html">Ventajas</a></li>
-            <li><a href="collapsible.html">Contacto</a></li>
+            <li><a href="{{ URL::to($path . '/empresa') }}">Empresa</a></li>
+            <li><a href="{{ URL::to($path . '/productos') }}">Productos</a></li>
+            <li><a href="{{ URL::to($path . '/aplicacion') }}">Aplicación</a></li>
+            <li><a href="{{ URL::to($path . '/trabajos') }}">Trabajos Realizados</a></li>
+            <li><a href="{{ URL::to($path . '/preguntas') }}">Preguntas Frecuentes</a></li>
+            <li><a href="{{ URL::to($path . '/distribuidores') }}">Distribuidores</a></li>
+            <li><a href="{{ URL::to($path . '/ventajas') }}">Ventajas</a></li>
+            <li><a href="{{ URL::to($path . '/contacto') }}">Contacto</a></li>
         </ul>
     </div>
 </nav>

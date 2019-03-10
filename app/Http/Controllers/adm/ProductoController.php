@@ -5,6 +5,7 @@ namespace App\Http\Controllers\adm;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Pfamilia;
+use App\Producto;
 
 class ProductoController extends Controller
 {
@@ -16,9 +17,9 @@ class ProductoController extends Controller
             return view('adm.producto', compact('tipo','title','familias'));
         } else {
             $title = "Página: " . strtoupper("productos");
-            
-            
-            return view('adm.producto', compact('tipo','title'));
+            $familias = Pfamilia::orderBy('order')->pluck('title', 'id');;
+            $productos = Producto::orderBy('order')->get();
+            return view('adm.producto', compact('tipo','title','familias','productos'));
         }
     }
 }
