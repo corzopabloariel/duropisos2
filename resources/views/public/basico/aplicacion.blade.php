@@ -15,11 +15,11 @@
         </fieldset>
         <div class="row">
         @foreach($aplicaciones AS $aplicacion)
-            <div class="col l4 s12">
-                <div class="card-content card-video">
+            <div class="col l4 m6 s12">
+                <div class="card-video">
                     <iframe style="width:100%" src="https://www.youtube.com/embed/{{$aplicacion['video']}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
-                <div class="card-action">
+                <div class="">
                     {!! $aplicacion["title"] !!}
                 </div>
             </div>

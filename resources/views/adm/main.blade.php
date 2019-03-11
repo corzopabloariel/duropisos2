@@ -119,8 +119,10 @@
                         <div class="collapsible-header"><i class="material-icons">perm_contact_calendar</i>Usuarios</div>
                         <div class="collapsible-body">
                             <ul>
-                                <li><a class="collapsible-header"><i class="material-icons">arrow_forward</i> Crear usuario</a></li>
-                                <li><a class="collapsible-header"><i class="material-icons">arrow_forward</i> Editar usuario</a></li>
+                                @if(Auth::user()["is_admin"])
+                                    <li><a href="{{ route('usuario', ['seccion' => 'todos']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Todos los usuarios</a></li>
+                                @endif
+                                <li><a href="{{ route('usuario', ['seccion' => 'datos']) }}" class="collapsible-header"><i class="material-icons">arrow_forward</i> Datos de usuario</a></li>
                             </ul>
                         </div>
                     </li>
@@ -267,22 +269,62 @@
                         if($(".modal select").length) 
                             $(".modal select").formSelect();
                     }
-
-                    if(window.ARR_colores.length > 0) {
-                        let t = $("#colores");
-                        for(var x in window.ARR_colores) {
-                            addColor(true);
-                            t.find("> .row:last-child()").find(`[name="id-${parseInt(x) + 1}"]`).val(window.ARR_colores[x]["id"]);
-                            t.find("> .row:last-child()").find(`[name="title-${parseInt(x) + 1}"]`).val((window.ARR_colores[x]["name"] === null ? "" : window.ARR_colores[x]["name"]));
-                            t.find("> .row:last-child()").find(`[name="codigo-${parseInt(x) + 1}"]`).val((window.ARR_colores[x]["code"] === null ? "" : window.ARR_colores[x]["code"]));
-                            t.find("> .row:last-child()").find(`[name="order-${parseInt(x) + 1}"]`).val((window.ARR_colores[x]["order"] === null ? "" : window.ARR_colores[x]["order"]));
-                            t.find("> .row:last-child()").find(`[name="image_text-${parseInt(x) + 1}"]`).val(window.ARR_colores[x]["image"]);
-                            t.find("> .row:last-child()").find(`[name="descripcion-${parseInt(x) + 1}"]`).val((window.ARR_colores[x]["descripcion"] === null ? "" : window.ARR_colores[x]["descripcion"]));
+                    if(window.ARR_colores !== undefined) {
+                        if(window.ARR_colores.length > 0) {
+                            let t = $("#colores");
+                            for(var x in window.ARR_colores) {
+                                addColor(true);
+                                t.find("> .row:last-child()").find(`[name="id-${parseInt(x) + 1}"]`).val(window.ARR_colores[x]["id"]);
+                                t.find("> .row:last-child()").find(`[name="title-${parseInt(x) + 1}"]`).val((window.ARR_colores[x]["name"] === null ? "" : window.ARR_colores[x]["name"]));
+                                t.find("> .row:last-child()").find(`[name="codigo-${parseInt(x) + 1}"]`).val((window.ARR_colores[x]["code"] === null ? "" : window.ARR_colores[x]["code"]));
+                                t.find("> .row:last-child()").find(`[name="order-${parseInt(x) + 1}"]`).val((window.ARR_colores[x]["order"] === null ? "" : window.ARR_colores[x]["order"]));
+                                t.find("> .row:last-child()").find(`[name="image_text-${parseInt(x) + 1}"]`).val(window.ARR_colores[x]["image"]);
+                                t.find("> .row:last-child()").find(`[name="descripcion-${parseInt(x) + 1}"]`).val((window.ARR_colores[x]["descripcion"] === null ? "" : window.ARR_colores[x]["descripcion"]));
+                            }
+                            delete window.ARR_colores;
                         }
-                        delete window.ARR_colores;
                     }
                 }
             });
+            metadato = function() {
+                let modal = $("#modal1");
+                let html = footer = "";
+                let url = "{{ url('/adm/data/') }}";
+                let url_add = "{{ url('/adm/metadatos') }}";
+                url += `/metadato/nada`;
+                modal.find("form").attr("action",url_add);
+                $.ajax({
+                    url: url,
+                    method: 'get',
+                    dataType: 'json',
+                    asy: false,
+                    success: function(result) {
+                        
+                        html += '<h4>Editar metadatos</h4>';
+                        html += '<div class="">';
+                            html += `<input type="hidden" value="${result.id}" id="frm_id" name="frm_id" />`;
+                            html += `<input name="tipo" type="hidden" value="metadato">`;
+                            html += '<div class="row">';
+                                html += '<div class=" col s12">';
+                                    html += '<label for="description">Descripción</label>';
+                                    html += `<textarea placeholder="Descripción" id="description" name="description" class="validate materialize-textarea" required="true">${result.description}</textarea>`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class=" col s12">';
+                                    html += '<label for="metadato">Metadatos</label>';
+                                    html += `<textarea placeholder="Metadatos" id="metadato" name="metadato" class="validate materialize-textarea" required="true">${result.description}</textarea>`;
+                                    html += '<span class="helper-text">Palabras separadas por una coma (,)</span>';
+                                html += '</div>';
+                            html += '</div>';
+                        html += '</div>';
+                        footer += '<button type="submit" class="btn btn-success">Editar</button>';
+                        modal.find(".modal-content").html(html);
+                        modal.find(".modal-footer").html(footer);
+                        modal.modal("open");
+                    }
+                });
+            }
             //
             editEmpresa = function(t) {
                 let modal = $("#modal1");
@@ -458,11 +500,89 @@
 
                 t.append(html);
             }
+            editUser = function() {
+                let modal = $("#modal1");
+                let url = "{{ url('/adm/data/') }}";
+                let url_edit = "{{ url('/adm/editdata/') }}";
+                url += `/mis_datos/nada`;
+                // url_edit += `/${t}/${id}`;
+
+                modal.find("form").attr("action",url_edit);
+                $.ajax({
+                    url: url,
+                    method: 'get',
+                    dataType: 'json',
+                    asy: false,
+                    success: function(result) {
+                        html = '<h4>Cambiar mis datos</h4>';
+                        html += `<input type="hidden" value="${result.id}" id="frm_id" name="frm_id" />`;
+                        html += `<input type="hidden" value="${result.is_admin}" name="is_admin" />`;
+                        html += `<input name="tipo" type="hidden" value="mis_datos">`;
+                        html += '<div class="">';
+                            html += '<div class="row">';
+                                html += '<div class=" col s12">';
+                                    html += '<label for="name">Nombre</label>';
+                                    html += `<input value="${result.name}" placeholder="Nombre" id="name" name="name" type="text" required="true" class="validate">`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class=" col s12 l6">';
+                                    html += '<label for="username">Usuario</label>';
+                                    html += `<input value="${result.username}" placeholder="Usuario" id="username" name="username" type="text" required="true" class="validate">`;
+                                html += '</div>';
+                                html += '<div class=" col s12 l6">';
+                                    html += '<label for="password">Cambiar contraseña</label>';
+                                    html += `<input placeholder="Cambiar contraseña" id="password" name="password" type="password" class="validate">`;
+                                    html += '<small class="helper-text">Complete solo si desea cambiar la contraseña de acceso</small>';
+                                html += '</div>';
+                            html += '</div>';
+                        html += '</div>';
+                        footer = '<button type="submit" class="btn btn-success">Cambiar</button>';
+                        modal.find(".modal-content").html(html);
+                        modal.find(".modal-footer").html(footer);
+                        modal.modal("open");
+                    }
+                });
+            }
             addRegistro = function(t) {
                 let modal = $("#modal1");
                 let html = footer = "";
                 let url_add = "{{ url('/adm/adddata/') }}";
                 switch(t) {
+                    case 'usuario':
+                        modal.find("form").attr("action",url_add);
+                        html += '<h4>Agregar usuario</h4>';
+                        html += `<input name="tipo" type="hidden" value="${t}">`;
+                        html += '<div class="add">';
+                            html += '<div class="row">';
+                                html += '<div class=" col s12">';
+                                    html += '<label for="name">Nombre</label>';
+                                    html += `<input placeholder="Nombre" id="name" name="name" type="text" required="true" class="validate">`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class=" col s12 l6">';
+                                    html += '<label for="username">Usuario</label>';
+                                    html += `<input placeholder="Usuario" id="username" name="username" type="text" required="true" class="validate">`;
+                                html += '</div>';
+                                html += '<div class=" col s12 l6">';
+                                    html += '<label for="password">Contraseña</label>';
+                                    html += `<input placeholder="Contraseña" id="password" name="password" type="password" required="true" class="validate">`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class=" col s12">';
+                                    html += '<label for="nivel">Nivel</label>';
+                                    html += `<select id="nivel" name="nivel" required="true" class="validate">`;
+                                        html += '<option value="" disabled selected>Seleccione</option>';
+                                        html += '<option value="1">Usuario</option>';
+                                        html += '<option value="2">Administrador</option>';
+                                    html += '</select>';
+                                html += '</div>';
+                            html += '</div>';
+                        html += '</div>';
+                        footer += '<button type="submit" class="btn btn-success">Agregar</button>';
+                        break;
                     case 'sliderhome':
                     case 'sliderempresa':
                         modal.find("form").attr("action",url_add);
@@ -504,7 +624,7 @@
                         html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
                         html += '<div class="add">';
                             html += '<div class="row">';
-                                html += '<div class=" col s6">';
+                                html += '<div class=" col s12 l6">';
                                     html += '<label for="first_name">Título</label>';
                                     html += `<input placeholder="Título" id="title" name="title" type="text" required="true" class="validate">`;
                                 html += '</div>';
@@ -693,7 +813,7 @@
                         html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
                         html += '<div class="container add">';
                             html += '<div class="row">';
-                                html += '<div class=" col s6">';
+                                html += '<div class=" col s12 l6">';
                                     html += '<label for="first_name">Título</label>';
                                     html += `<input placeholder="Título" id="title" name="title" type="text" required="true" class="validate">`;
                                 html += '</div>';
@@ -724,7 +844,7 @@
                         html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
                         html += '<div class="add">';
                             html += '<div class="row">';
-                                html += '<div class=" col s6">';
+                                html += '<div class=" col s12 l6">';
                                     html += '<label for="title">Título</label>';
                                     html += `<input placeholder="Título" id="title" name="title" type="text" required="true" class="validate">`;
                                 html += '</div>';
@@ -734,7 +854,7 @@
                                 html += '</div>';
                             html += '</div>';
                             html += '<div class="row">';
-                                html += '<div class="input-field col s6">';
+                                html += '<div class="input-field col s12 l6">';
                                     html += '<select name="pfamilia_id" required="true">';
                                         html += '<option value="" disabled selected>Seleccione</option>';
                                         for(var i in window.familias)
@@ -742,7 +862,7 @@
                                     html += '</select>';
                                     html += '<label>Familia de producto</label>';
                                 html += '</div>';
-                                html += '<div class="input-field col s6">';
+                                html += '<div class="input-field col s12 l6">';
                                     html += '<p style="margin-top:0;">';
                                         html += '<label>';
                                             html += '<input type="checkbox" class="filled-in" name="is_profesional_input" />';
@@ -779,7 +899,7 @@
                         html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
                         html += '<div class="add">';
                             html += '<div class="row">';
-                                html += '<div class=" col s6">';
+                                html += '<div class=" col s12 l6">';
                                     html += '<label for="title">Nombre</label>';
                                     html += `<input placeholder="Nombre" id="title" name="title" type="text" required="true" class="validate">`;
                                 html += '</div>';
@@ -821,17 +941,27 @@
                                 html += '</div>';
                             html += '</div>';
                             html += '<div class="row">';
-                                html += '<div class=" col s6">';
+                                html += '<div class=" col s12 l6">';
+                                    html += '<label for="latitud">Latitud</label>';
+                                    html += `<input placeholder="Latitud" id="latitud" name="latitud" type="text" required="true" class="validate">`;
+                                html += '</div>';
+                                html += '<div class=" col s12 l6">';
+                                    html += '<label for="longitud">Longitud</label>';
+                                    html += `<input placeholder="Longitud" id="longitud" name="longitud" type="text" required="true" class="validate">`;
+                                html += '</div>';
+                            html += '</div>';
+                            html += '<div class="row">';
+                                html += '<div class=" col s12 l6">';
                                     html += '<label for="telefono">Teléfono</label>';
                                     html += `<input placeholder="Teléfono" id="telefono" name="telefono" type="text" required="true" class="validate">`;
                                 html += '</div>';
                             html += '</div>';
                             html += '<div class="row">';
-                                html += '<div class=" col s6">';
+                                html += '<div class=" col s12 l6">';
                                     html += '<label for="provincia_id">Provincia</label>';
                                     html += `<select onchange="buscarLocalidad(this)" id="provincia_id" name="provincia_id" required="true" style="width:100%"><select>`;
                                 html += '</div>';
-                                html += '<div class=" col s6">';
+                                html += '<div class=" col s12 l6">';
                                     html += '<label for="localidad_id">Localidad</label>';
                                     html += `<select id="localidad_id" name="localidad_id" required="true" style="width:100%"><select>`;
                                 html += '</div>';
@@ -861,6 +991,47 @@
                         if(result !== null) {
                             let html = footer = "";
                             switch(t) {
+                                case 'usuario':
+                                    html += '<h4>Editar usuario</h4>';
+                                    html += `<input type="hidden" value="${result.id}" id="frm_id" name="frm_id" />`;
+                                    html += `<input name="tipo" type="hidden" value="${t}">`;
+                                    html += '<div class="">';
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s12">';
+                                                html += '<label for="name">Nombre</label>';
+                                                html += `<input value="${result.name}" placeholder="Nombre" id="name" name="name" type="text" required="true" class="validate">`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s12 l6">';
+                                                html += '<label for="username">Usuario</label>';
+                                                html += `<input value="${result.username}" placeholder="Usuario" id="username" name="username" type="text" required="true" class="validate">`;
+                                            html += '</div>';
+                                            html += '<div class=" col s12 l6">';
+                                                html += '<label for="password">Restaurar contraseña</label>';
+                                                html += `<input placeholder="Restaurar contraseña" id="password" name="password" type="password" class="validate">`;
+                                                html += '<small class="helper-text">Complete solo si desea cambiar la contraseña del usuario</small>';
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s12">';
+                                                html += '<label for="nivel">Nivel</label>';
+                                                html += `<select id="nivel" name="nivel" required="true" class="validate">`;
+                                                    html += '<option value="" disabled selected>Seleccione</option>';
+                                                    if(!parseInt(result.is_admin))
+                                                        html += '<option selected value="1">Usuario</option>';
+                                                    else
+                                                        html += '<option value="1">Usuario</option>';
+                                                    if(parseInt(result.is_admin))
+                                                        html += '<option selected value="2">Administrador</option>';
+                                                    else
+                                                        html += '<option value="2">Administrador</option>';
+                                                html += '</select>';
+                                            html += '</div>';
+                                        html += '</div>';
+                                    html += '</div>';
+                                    footer += '<button type="submit" class="btn btn-success">Editar</button>';
+                                    break;
                                 case 'pregunta':
                                     html += '<h4>Editar pregunta</h4>';
                                     html += `<input type="hidden" value="${result.id}" id="frm_id" name="frm_id" />`;
@@ -894,7 +1065,7 @@
                                         html += `<input name="tipo" type="hidden" value="${t}">`;
                                         html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
                                         html += '<div class="row">';
-                                            html += '<div class=" col s6">';
+                                            html += '<div class=" col s12 l6">';
                                                 html += '<label for="first_name">Nombre</label>';
                                                 html += `<input placeholder="Nombre" id="title" name="title" type="text" required="true" class="validate" value="${result.title}">`;
                                             html += '</div>';
@@ -940,17 +1111,27 @@
                                             html += '</div>';
                                         html += '</div>';
                                         html += '<div class="row">';
-                                            html += '<div class=" col s6">';
+                                            html += '<div class=" col s12 l6">';
+                                                html += '<label for="latitud">Latitud</label>';
+                                                html += `<input placeholder="Latitud" value="${result.latitdu}" id="latitud" name="latitud" type="text" required="true" class="validate">`;
+                                            html += '</div>';
+                                            html += '<div class=" col s12 l6">';
+                                                html += '<label for="longitud">Longitud</label>';
+                                                html += `<input placeholder="Longitud" value="${result.longitud}" id="longitud" name="longitud" type="text" required="true" class="validate">`;
+                                            html += '</div>';
+                                        html += '</div>';
+                                        html += '<div class="row">';
+                                            html += '<div class=" col s12 l6">';
                                                 html += '<label for="telefono">Teléfono</label>';
                                                 html += `<input placeholder="Teléfono" id="telefono" name="telefono" value="${(result.telefono === null ? "" : result.telefono)}" type="text" required="true" class="validate">`;
                                             html += '</div>';
                                         html += '</div>';
                                         html += '<div class="row">';
-                                            html += '<div class=" col s6">';
+                                            html += '<div class=" col s12 l6">';
                                                 html += '<label for="provincia_id">Provincia</label>';
                                                 html += `<select onchange="buscarLocalidad(this)" id="provincia_id" name="provincia_id" required="true" style="width:100%"><select>`;
                                             html += '</div>';
-                                            html += '<div class=" col s6">';
+                                            html += '<div class=" col s12 l6">';
                                                 html += '<label for="localidad_id">Localidad</label>';
                                                 html += `<select id="localidad_id" name="localidad_id" required="true" style="width:100%"><select>`;
                                             html += '</div>';
@@ -1013,7 +1194,7 @@
                                             html += '</div>';
                                         html += '</div>';
                                         html += '<div class="row">';
-                                            html += '<div class=" col s6">';
+                                            html += '<div class=" col s12 l6">';
                                                 html += '<label for="codigo">Código</label>';
                                                 html += `<input placeholder="Código" id="codigo" name="codigo" type="text" class="validate" value="${(result.codigo === null ? "" : result.codigo)}">`;
                                             html += '</div>';
@@ -1129,7 +1310,7 @@
                                     html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
                                     html += '<div class="container">';
                                         html += '<div class="row">';
-                                            html += '<div class=" col s6">';
+                                            html += '<div class=" col s12 l6">';
                                                 html += '<label for="first_name">Título</label>';
                                                 html += `<input placeholder="Título" id="title" name="title" type="text" required="true" class="validate" value="${result.title}">`;
                                             html += '</div>';
@@ -1166,7 +1347,7 @@
                                     html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
                                     html += '<div class="container">';
                                         html += '<div class="row">';
-                                            html += '<div class=" col s6">';
+                                            html += '<div class=" col s12 l6">';
                                                 html += '<label for="title">Título</label>';
                                                 html += `<input placeholder="Título" id="title" name="title" type="text" required="true" class="validate" value="${result.title}">`;
                                             html += '</div>';
@@ -1231,7 +1412,7 @@
                                     html += `<input name="url" type="hidden" value="{{ asset('img/') }}">`;
                                     html += '<div class="container">';
                                         html += '<div class="row">';
-                                            html += '<div class=" col s6">';
+                                            html += '<div class=" col s12 l6">';
                                                 html += '<label for="title">Título</label>';
                                                 html += `<input placeholder="Título" id="title" name="title" type="text" required="true" class="validate" value="${result.title}">`;
                                             html += '</div>';
@@ -1241,7 +1422,7 @@
                                             html += '</div>';
                                         html += '</div>';
                                         html += '<div class="row">';
-                                            html += '<div class="input-field col s6">';
+                                            html += '<div class="input-field col s12 l6">';
                                                 html += '<select name="pfamilia_id" required="true">';
                                                     html += '<option value="" disabled selected>Seleccione</option>';
                                                     for(var i in window.familias) {
@@ -1253,7 +1434,7 @@
                                                 html += '</select>';
                                                 html += '<label>Familia de producto</label>';
                                             html += '</div>';
-                                            html += '<div class="input-field col s6">';
+                                            html += '<div class="input-field col s12 l6">';
                                                 html += '<p style="margin-top:0;">';
                                                     html += '<label>';
                                                         if(parseInt(result.is_profesional))
@@ -1375,9 +1556,9 @@
                                         if($("table").find(".vacio").length)
                                             $("table").find(".vacio").remove();
                                         $("table").find("tbody").append(data);
-                                        $("#modal1").modal("close");
                                     } else
                                         window.distribuidor.draw();
+                                    $("#modal1").modal("close");
                                 }
                             });
                         }
@@ -1390,18 +1571,25 @@
                             cache: false,
                             processData: false,
                             beforeSend : function() {
-                                notificacion("Espere. Al finalizar la tabla se actualizará");
+                                if(tipo == "metadato")
+                                    notificacion("Espere. La página se recargará");
+                                else
+                                    notificacion("Espere. Al finalizar la tabla se actualizará");
                             },
                             success: function(data){
                                 console.log(data)
-                                $("#modal1").modal("close");
-                                if(tipo != "distribuidor") {
-                                    if(data.id !== undefined) {
-                                        if($(`tr[data-id="${data.id}"]`).length)
-                                            $(`tr[data-id="${data.id}"]`).html(data.html)
-                                    }
-                                } else
-                                    window.distribuidor.draw();
+                                if(tipo == "metadato" || tipo == "mis_datos") {
+                                    location.reload();
+                                } else {
+                                    $("#modal1").modal("close");
+                                    if(tipo != "distribuidor") {
+                                        if(data.id !== undefined) {
+                                            if($(`tr[data-id="${data.id}"]`).length)
+                                                $(`tr[data-id="${data.id}"]`).html(data.html)
+                                        }
+                                    } else
+                                        window.distribuidor.draw();
+                                }
                             }
                         });
                     }

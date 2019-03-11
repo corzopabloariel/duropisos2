@@ -8,13 +8,13 @@
     <div class="bg_index" style="height: 100vh; margin-bottom:0;">
         <div class="d-flex align-items-center justify-content-center" style="height: inherit">
             <div class="row w-100">
-                <div class="col s8 offset-s2 bg-white-o">
+                <div class="col s12 m8 l6 offset-m2 offset-l3 bg-white-o">
                     <div class="row p-3 m-0">
-                        <div class="col s6">
+                        <div class="col s12 m12 l6">
                             <img class="mx-auto d-block w-100" src="{{ asset('img/logo/logo.png') }}"/>
                             <p style="margin-bottom:0;" class="text-center text-uppercase text_importante">elegí un tipo de usuario</p>
                         </div>
-                        <div class="col s6 text-center">
+                        <div class="col s12 m12 l6 text-center">
                             <a href="{{ route('profesional') }}" class="img-profesional">
                                 <span></span>
                                 <p style="margin-bottom:0">Profesional</p>

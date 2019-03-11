@@ -11,6 +11,8 @@
                 <div class="card">
                     <div class="card-content">
                         <span class="card-title">Familia de productos<button class="btn right" onclick="addRegistro('pfamilia')"><i class="material-icons">add_circle</i></button></span>
+                    </div>
+                    <div class="card-content table">
                         <table class="striped">
                             <thead>
                                 <th>Imagen</th>
@@ -46,6 +48,8 @@
             <div class="card">
                 <div class="card-content">
                     <span class="card-title">Productos<button onclick="addRegistro('producto')" class="btn right"><i class="fas fa-plus"></i></button></span>
+                </div>
+                <div class="card-content table">
                     <table class="striped">
                         <thead>
                             <th>Código</th>

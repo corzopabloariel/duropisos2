@@ -6,7 +6,7 @@
 @section('body')
 <main>
     <div class="row">
-        <div class="col s6">
+        <div class="col s12 l6">
             <form>
                 <fieldset>
                     <legend><button type="button" onclick="editEmpresa('data')" class="btn">Domicilio <i class="material-icons right">send</i></button></legend>
@@ -53,7 +53,7 @@
                 </fieldset>
             </form>
         </div>
-        <div class="col s6">
+        <div class="col s12 l6">
             <form>
                 <fieldset>
                     <legend><button type="button" onclick="editEmpresa('contacto')" class="btn">Contacto <i class="material-icons right">send</i></button></legend>

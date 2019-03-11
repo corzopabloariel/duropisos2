@@ -23,7 +23,7 @@
         </div>
         <div class="row trabajos" style="padding-top:2em;">
             @foreach($trabajos AS $trabajo)
-                <div class="col l4 s6" data-tipo="{{$trabajo['pfamilia_id']}}" data-profesional="{{$trabajo['is_profesional']}}" data-particular="{{$trabajo['is_particular']}}">
+                <div class="col l4 m6 s12" data-tipo="{{$trabajo['pfamilia_id']}}" data-profesional="{{$trabajo['is_profesional']}}" data-particular="{{$trabajo['is_particular']}}">
                     <img class="materialboxed" src="{{asset('img')}}/{{$trabajo['image']}}" />
                     <p>{!!$trabajo["title"]!!}</p>
                 </div>

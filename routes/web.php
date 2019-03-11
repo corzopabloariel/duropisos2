@@ -10,20 +10,17 @@
 |
 */
 
-Route::get('/', function () {
-    return view("welcome");
-});
+Route::get('/',['uses' => 'pub\Pagecontroller@index' , 'as' => 'index']);
 
 Route::get('login','Auth\LoginController@showLoginForm')->name('login');
 
-Route::post('login','Auth\LoginController@login');
+// Route::post('login','Auth\LoginController@login');
+Route::post('login', [ 'uses' => 'adm\LoginController@authentificate', 'as' => 'authentificate' ]);
 
-$routes = function($prefix) {
-    Route::get('/',['uses' => 'pub\Pagecontroller@particular' , 'as' => 'particular']);
-};
+Route::get('particular',['uses' => 'pub\Pagecontroller@particular' , 'as' => 'particular']);
+Route::get('profesional',['uses' => 'pub\Pagecontroller@profesional' , 'as' => 'profesional']);
+Route::get('mail',['uses' => 'pub\Pagecontroller@mail' , 'as' => 'mail']);
 
-Route::group(['prefix' => 'particular'], $routes);
-Route::group(['prefix' => 'profesional'], $routes);
 Route::get('{path}/productos',['uses' => 'pub\Pagecontroller@productos' , 'as' => 'productos']);
 Route::get('{path}/productos/{tipo}',['uses' => 'pub\Pagecontroller@tipo' , 'as' => 'tipo']);
 Route::get('{path}/empresa',['uses' => 'pub\Pagecontroller@empresa' , 'as' => 'empresa']);
@@ -49,8 +46,10 @@ Route::group(['middleware' => 'auth', 'prefix' => 'adm'], function() {
     Route::get('admempresa', ['uses' => 'adm\EmpresaController@datos', 'as' => 'admempresa']);
     Route::post('datatable', ['uses' => 'adm\EmpresaController@datatable', 'as' => 'datatable']);
 
-    Route::get('logout', ['uses' => 'Auth\LoginController@logout' , 'as' => 'adm.logout']);
+    Route::get('logout', ['uses' => 'adm\LoginController@logout' , 'as' => 'adm.logout']);
     Route::get('metadatos',['uses' => 'adm\MetadatosController@index', 'as' => 'metadatos']);
+    Route::post('metadatos',['uses' => 'adm\MetadatosController@edit', 'as' => 'metadatos']);
+    Route::get('usuario/{seccion}', ['uses' => 'adm\UsuarioController@index', 'as' => 'usuario']);
     Route::get('page/{seccion}', ['uses' => 'adm\PageController@edit', 'as' => 'page']);
     Route::get('buscar/{tipo}/{id}', ['uses' => 'adm\PageController@search', 'as' => 'buscar']);
     Route::get('producto/{tipo}', ['uses' => 'adm\ProductoController@edit', 'as' => 'producto']);

@@ -19,14 +19,14 @@
     <!-- FAMILIA DE PRODUCTOS -->
 
     <article class="wrapper-familias">
-        <ul class="familias">
+        <div class="row familias">
             @foreach($familias AS $familia)
-            <li>
+            <div class="align-items-center">
                 <img src="{{asset('img')}}/{{$familia['image']}}" />
-                <p>{{$familia["title"]}}</p>
-            </li>
+                <p>{!! $familia["title"] !!}</p>
+            </div>
             @endforeach
-        </ul>
+        </div>
     </article>
     <article class="wrapper-empresa-home bg-F9F9F9">
         <div class="container">
@@ -38,7 +38,7 @@
                     <p class="m-0 text-uppercase">{{$data["title_resume"]}}</p>
                     <h4 class="text_importante" style="margin-top:0">{{$data["subtitle_resume"]}}</h4>
                     {!!$data['text_resume']!!}
-                    <a class="btn-solo">nuestra empresa</a>
+                    <a href="{{ URL::to($path . '/empresa') }}" class="btn-solo">nuestra empresa</a>
                 </div>
             </div>
         </div>
@@ -50,14 +50,14 @@
             <div class="row m-0">
                 <p class="text-uppercase m-0 text-center">servicio integral</p>
                 <h4 style="margin-top:0" class="text-center">Garantía y respaldo</h4>
-                <ul class="servicios">
+                <div class="row servicios">
                     @foreach($servicios AS $servicio)
-                    <li>
+                    <div class="col s12 l4">
                         <img src="{{asset('img')}}/{{$servicio['icon']}}" />
                         <p>{!!$servicio["title"]!!}</p>
-                    </li>
+                    </div>
                     @endforeach
-                </ul>
+                </div>
             </div>
         </div>
     </article>

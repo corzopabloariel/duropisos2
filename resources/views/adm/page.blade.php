@@ -86,6 +86,8 @@
             <div class="card">
                 <div class="card-content">
                     <span class="card-title">Servicio integral<button onclick="addRegistro('servicio')" class="btn right"><i class="fas fa-plus"></i></button></span>
+                </div>
+                <div class="card-content table">
                     <table class="striped">
                         <thead>
                             <th>Ícono</th>

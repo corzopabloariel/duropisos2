@@ -1,4 +1,5 @@
 <div class="container-fluid bg-light">
+    @include('adm.flash-message')
     <div class="position-relative h-100 w-100 d-flex justify-content-center align-items-center">
         <div class="col-xl-4">
             <img src="{{ asset('img/logo/logo.png') }}" alt="Logo" class="mx-auto mb-4 d-block w-75"/>

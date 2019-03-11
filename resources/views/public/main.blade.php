@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>@yield('headTitle', 'DuroPisos')</title>
+        <title>@yield('headTitle', 'Duro Pisos . Duro Fix . Revestimientos Cementicios . Argentina')</title>
         <link rel="icon" type="image/png" href="{{ asset('img/logo/'. $favicon) }}"/>
         
 
@@ -25,6 +25,10 @@
         <!-- </Styles> -->
     </head>
     <body>
+        <div id="modal1" class="modal">
+            <div class="modal-content">
+            </div>
+        </div>
         <div id="wrapper">
             @yield('body')
         </div>
@@ -46,6 +50,17 @@
                     fullWidth: true,
                     indicators: true
                 });
+
+                $(".colores > div").on("click",function() {
+                    let data = $(this).html();
+                    let description = $(this).data("descripcion");
+                    let modal = $("#modal1");
+
+                    let html = data;
+
+                    modal.find(".modal-content").html(`<div class="container">${html}${description}</div>`);
+                    modal.modal("open");
+                })
 
                 $(".tipos a").on("click", function(e) {
                     e.preventDefault();

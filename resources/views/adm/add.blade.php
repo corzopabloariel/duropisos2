@@ -12,6 +12,8 @@
             <div class="card">
                 <div class="card-content">
                     <span class="card-title">Ventajas<button onclick="addRegistro('ventaja')" class="btn right"><i class="fas fa-plus"></i></button></span>
+                </div>
+                <div class="card-content table">
                     <table>
                         <thead>
                             <th>Ícono</th>
@@ -47,7 +49,8 @@
         <div class="card">
             <div class="card-content">
                 <span class="card-title">Preguntas<button onclick="addRegistro('pregunta')" class="btn right"><i class="fas fa-plus"></i></button></span>
-        
+            </div>
+            <div class="card-content table">
                 <table>
                     <thead>
                         <th>Pregunta</th>
@@ -83,6 +86,8 @@
             <div class="card">
                 <div class="card-content">
                     <span class="card-title">Aplicaciones<button onclick="addRegistro('aplicacion')" class="btn right"><i class="fas fa-plus"></i></button></span>
+                </div>
+                <div class="card-content table">
                     <table>
                         <thead>
                             <th>Link</th>
@@ -118,6 +123,8 @@
         <div class="card">
             <div class="card-content">
                 <span class="card-title">Trabajos realizados<button onclick="addRegistro('trabajo')" class="btn right"><i class="fas fa-plus"></i></button></span>
+            </div>
+            <div class="card-content table">
                 <table class="striped">
                     <thead>
                         <th>Imagen</th>

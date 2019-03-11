@@ -50,9 +50,6 @@ body {
 .position-absolute {
     position: absolute;
 }
-.modal {
-    width: 70%
-}
 .img-profesional span {
     background-image: url(../img/general/profesional.png);
     background-position: center top;
@@ -119,9 +116,33 @@ body {
 .text-uppercase { 
     text-transform: uppercase;
 }
-
+.text-title {
+    color: #143D86;
+}
+.text-titulo {
+    color: #9D0526;
+}
 .text_hover:hover {
     color: #C11939 !important;
+}
+.ventajas ul {
+    list-style-image: url(../img/general/list-ventaja.fw.png);
+    list-style-position: inside;
+}
+.presentacion ul {
+    list-style-image: url(../img/general/list-presentacion.fw.png);
+    list-style-position: inside;
+}
+.ventajas ul li + li,
+.presentacion ul li + li {
+    margin-top: 1em;
+}
+.modal-content img {
+    width: 100%;
+}
+.redes {
+    color: #C11939;
+    font-size: 24px;
 }
 .text_importante {
     color: #163D88;
@@ -161,7 +182,7 @@ body {
     background-color: #D9D9D9;
 }
 .p-3 {
-    padding:3em;
+    padding:3em 1.5em;
 }
 .ul-separado li + li {
     margin-top: .7em;
@@ -175,6 +196,32 @@ body {
     left:0;
     top: calc(50% - 12px);
     color: #C11939;
+}
+.image-producto img {
+    width: 100%;
+}
+.mercadolibre {
+    display: inline-block;
+}
+.mercadolibre a img {
+    border:none;
+    width: 155px;
+    height: 38px;
+}
+.colores div {
+    display: inline-block;
+    cursor: pointer;
+    width: 60px;
+}
+.colores div img {
+    width: 58px;
+    height: 58px;
+    display: block;
+    margin: 0 auto;
+}
+.colores div p {
+    width: 58px;
+    margin: 0 auto;
 }
 nav ul {
     text-align: center;
@@ -231,6 +278,9 @@ footer ul {
     margin: 0;
     color: #163D88;
 }
+.a-link {
+    color: #797979
+}
 .fieldset-title legend {
     display: inline-block;
     padding: 0 1em;
@@ -262,8 +312,6 @@ footer ul {
     position: relative;
     margin:0;
     text-align: center;
-    display: flex;
-    justify-content: center;
 }
 .trabajos img {
     display: block;
@@ -285,32 +333,30 @@ footer ul {
     color: #595959;
 }
 
-.familias > li {
+.familias > div {
     display: flex;
     flex-direction: column;
 }
-.servicios > li {
+.servicios > div {
     display: flex;
     align-items: center;
 }
-.servicios > li + li {
-    margin-left: 2em;
-}
-.servicios > li img {
+.servicios > div img {
     width: 96px;
     height: 96px;
 }
-.servicios > li p {
+.servicios > div p {
     width: 100px;
     text-align: left;
     margin-left: 1em;
 }
-.familias > li img {
+.familias > div img {
     width: 208px;
     height: 200px;
 }
-.familias > li p {
+.familias > div p {
     margin-bottom: 0;
+    width: 208px;
     color: #595959;
 }
 .card-video {
@@ -339,8 +385,22 @@ footer ul {
 .card-columns .card {
     margin-bottom: .75rem;
 }
-
+@media (max-width: 576px) {
+    header img {
+        width: 100%;
+        height: auto;
+    }
+    .espacio {
+        padding-top: 1em !important;
+        margin-top: 1em;
+        border-top: 1px solid #ccc;
+    }
+}
 @media (min-width: 576px) {
+    header img {
+        width: 100%;
+        height: auto;
+    }
     .card-deck {
         -ms-flex-flow: row wrap;
         flex-flow: row wrap;

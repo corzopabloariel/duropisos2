@@ -15,7 +15,7 @@
         </fieldset>
         <div class="row ventajas">
             @foreach($ventajas AS $ventaja)
-                <div class="col l4 s6">
+                <div class="col l4 m4 s12">
                     <div class="d-flex align-items-center">
                         <img src="{{asset('img')}}/{{$ventaja['icon']}}" />
                         <p>{!!$ventaja["title"]!!}</p>

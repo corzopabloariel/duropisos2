@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Extensions\Helpers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+
 use App\Page;
 use App\Servicio;
 use App\Empresa;
@@ -23,6 +25,8 @@ use App\EmpresaDato;
 use App\EmpresaContacto;
 use App\Slider;
 use App\Colorproducto;
+use App\Metadato;
+use App\User;
 use Mockery\Undefined;
 
 class PageController extends Controller
@@ -96,6 +100,12 @@ class PageController extends Controller
     public function data($tipo,$id) {
         $data = null;
         switch($tipo) {
+            case "mis_datos":
+                $data = Auth::user();
+                break;
+            case "usuario":
+                $data = User::find($id);
+                break;
             case "contacto":
                 $data = EmpresaContacto::first();
                 break;
@@ -129,6 +139,9 @@ class PageController extends Controller
                 break;
             case "distribuidor":
                 $data = Distribuidor::find($id);
+                break;
+            case "metadato":
+                $data = Metadato::first();
                 break;
         }
         return $data;
@@ -217,10 +230,38 @@ class PageController extends Controller
                 }
             }
         }
+        if($tipo == "usuario") {
+            $datos["is_admin"] = 0;
+            $datos["password"] = $data["password"];
+            if(!empty($datos["password"]))
+                $datos["password"] = Hash::make($datos["password"]);
+            
+            $nivel = $datos["nivel"];
+            unset($datos["nivel"]);
+            if($nivel == 2)
+                $datos["is_admin"] = 1;
+        }
+        if($tipo == "mis_datos") {
+            if(!empty($datos["password"]))
+                $datos["password"] = Hash::make($datos["password"]);
+            else
+                $datos["password"] = $data["password"];
+        }
         
         $data->fill($datos);
         $data->save();
         switch($tipo) {
+            case "usuario":
+                $tipo = "Usuario";
+                if($nivel == 2) $tipo = "Administrador";
+                $html = "<td>{$datos["name"]}</td>";
+                $html .= "<td>{$datos["username"]}</td>";
+                $html .= "<td>{$tipo}</td>";
+                $html .= '<td class="text-center">';
+                    $html .= '<button type="button" class="btn btn-primary" onclick="edit(\'usuario\',' . $data["id"] . ')"><i class="material-icons">create</i></button> ';
+                    $html .= '<button type="button" class="btn btn-danger" onclick="erase(\'usuario\',' . $data["id"] . ')"><i class="material-icons">delete</i></button>';
+                $html .= '</td>';
+                break;
             case "slider":
                 $name = "{$url}/{$datos["image"]}?time=" . time();
                 
@@ -253,11 +294,11 @@ class PageController extends Controller
                     $arr["code"] = $datos["codigo-{$i}"];
                     $arr["order"] = $datos["order-{$i}"];
                     $arr["descripcion"] = $datos["descripcion-{$i}"];
-                    try {
-                        $arr["image"] = image;
-                    } catch (\Throwable $th) {
-                        $arr["image"] = NULL;
-                    }
+                    // try {
+                        $arr["image"] = $image;
+                    // } catch (\Throwable $th) {
+                    //     $arr["image"] = NULL;
+                    // }
                     $arr["image_text"] = $datos["image_text-{$i}"];
                     $Arr_colores[] = $arr;
                     unset($datos["id-{$i}"]);
@@ -367,6 +408,7 @@ class PageController extends Controller
                 
                 break;
             case "distribuidor":
+            case "mis_datos":
                 $html = "";
                 break;
         }
@@ -489,6 +531,27 @@ class PageController extends Controller
             $datos["url"] = strtolower($datos["url"]);
         }
         switch($tipo) {
+            case "usuario":
+                $datos["is_admin"] = 0;
+                $datos["password"] = Hash::make($datos["password"]);
+                $tipo = "Usuario";
+                $nivel = $datos["nivel"];
+                unset($datos["nivel"]);
+                if($nivel == 2) {
+                    $datos["is_admin"] = 1;
+                    $tipo = "Administrador";
+                }
+                $OBJ = User::create($datos);
+                $html = "<tr data-id='{$OBJ["id"]}'>";
+                    $html .= "<td>{$datos["name"]}</td>";
+                    $html .= "<td>{$datos["username"]}</td>";
+                    $html .= "<td>{$tipo}</td>";
+                    $html .= '<td class="text-center">';
+                        $html .= '<button type="button" class="btn btn-primary" onclick="edit(\'usuario\',' . $OBJ["id"] . ')"><i class="material-icons">create</i></button> ';
+                        $html .= '<button type="button" class="btn btn-danger" onclick="erase(\'usuario\',' . $OBJ["id"] . ')"><i class="material-icons">delete</i></button>';
+                    $html .= '</td>';
+                $html .= "</tr>";
+                break;
             case "sliderhome":
                 $datos["tipo"] = "home";
                 $OBJ = Slider::create($datos);
@@ -650,8 +713,8 @@ class PageController extends Controller
                 $html .= "</tr>";
                 break;
             case "distribuidor":
-                $datos["longitud"] = 0;
-                $datos["latitud"] = 0;
+                // $datos["longitud"] = 0;
+                // $datos["latitud"] = 0;
                 Distribuidor::create($datos);
                 $html = "";
                 break;

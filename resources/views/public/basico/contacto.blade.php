@@ -20,21 +20,21 @@
                 </ul>
             </div>
             <div class="col l8 s12">
-                <form action="">
+                <form method="POST" action="{{route('mail')}}">
                     {{ csrf_field() }}
                     <div class="row">
-                        <div class="col l6 s12">
+                        <div class="col l6 m6 s12">
                             <input id="" type="text" class="validate" name="nombre" required="true" placeholder="Nombre" tabindex="1">
                         </div>
-                        <div class="col l6 s12">
+                        <div class="col l6 m6 s12">
                             <input id="" type="email" class="validate" name="email" required="true" placeholder="Email" tabindex="3">
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col l6 s12">
+                        <div class="col l6 m6 s12">
                             <input id="" type="text" class="validate" name="apellido" required="true" placeholder="Apellido" tabindex="2">
                         </div>
-                        <div class="col l6 s12">
+                        <div class="col l6 m6 s12">
                             <input id="" type="text" class="validate" name="telefono" required="true" placeholder="Teléfono" tabindex="4">
                         </div>
                     </div>

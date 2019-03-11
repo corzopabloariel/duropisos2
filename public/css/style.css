@@ -27,6 +27,13 @@ body {
 .bg-F9F9F9 {
     background-color: #F9F9F9;
 }
+.modal {
+    width: 70%
+}
+.table {
+    overflow-x: auto;
+    width: 100%;
+}
 .nav {
     background-color: #002E5D;
 }

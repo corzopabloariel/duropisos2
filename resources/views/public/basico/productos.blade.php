@@ -16,7 +16,7 @@
 
         <div class="row trabajos" style="padding-top:2em;">
             @foreach($familias AS $familia)
-                <a href="{!!URL::to('particular/productos/')!!}/{{$familia['url']}}" class="col l4 s6 text_principal_444444">
+                <a href="{!!URL::to('particular/productos/')!!}/{{$familia['url']}}" class="col l4 m4 s12 text_principal_444444">
                     <img src="{{asset('img')}}/{{$familia['image']}}" />
                     <p class="text-center" style="padding-top:1em;">{!!$familia["title"]!!}</p>
                 </a>
